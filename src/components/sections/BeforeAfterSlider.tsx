@@ -1,4 +1,4 @@
-import { useState, useRef, type MouseEvent, type TouchEvent } from "react";
+import { useState } from "react";
 
 interface SliderProps {
     beforeSrc: string;
@@ -18,54 +18,24 @@ export function BeforeAfterSlider({
     description,
 }: SliderProps) {
     const [position, setPosition] = useState(50);
-    const sliderRef = useRef<HTMLDivElement>(null);
-    const dragging = useRef(false);
-
-    const updatePosition = (clientX: number) => {
-        const el = sliderRef.current;
-        if (!el) return;
-        const rect = el.getBoundingClientRect();
-        const p = Math.min(Math.max(((clientX - rect.left) / rect.width) * 100, 0), 100);
-        setPosition(p);
-    };
-
-    const handleMouseDown = (e: MouseEvent) => {
-        dragging.current = true;
-        updatePosition(e.clientX);
-    };
-
-    const handleMouseMove = (e: MouseEvent) => {
-        if (dragging.current) updatePosition(e.clientX);
-    };
-
-    const handleMouseUp = () => {
-        dragging.current = false;
-    };
-
-    const handleTouchStart = (e: TouchEvent) => {
-        dragging.current = true;
-        updatePosition(e.touches[0].clientX);
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-        if (dragging.current) updatePosition(e.touches[0].clientX);
-    };
 
     return (
         <div className="rounded-3xl overflow-hidden border border-gline shadow-[0_8px_40px_rgba(0,0,0,0.45)]">
             <div
-                ref={sliderRef}
-                className="relative h-[220px] overflow-hidden cursor-ew-resize select-none"
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
-                onMouseLeave={handleMouseUp}
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={handleMouseUp}
+                className="relative h-[220px] overflow-hidden select-none"
             >
+                <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={position}
+                    onChange={(e) => setPosition(Number(e.target.value))}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-20 m-0"
+                    aria-label="Before/After Slider"
+                />
+
                 {/* Before */}
-                <div className="absolute inset-0 w-full h-full">
+                <div className="absolute inset-0 w-full h-full pointer-events-none">
                     <img
                         src={beforeSrc}
                         alt={beforeAlt}
@@ -75,7 +45,7 @@ export function BeforeAfterSlider({
                 </div>
                 {/* After */}
                 <div
-                    className="absolute inset-0 w-full h-full"
+                    className="absolute inset-0 w-full h-full pointer-events-none"
                     style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
                 >
                     <img src={afterSrc} alt={afterAlt} loading="lazy" className="w-full h-full object-cover" />
@@ -85,7 +55,7 @@ export function BeforeAfterSlider({
                     className="absolute top-0 h-full w-0.5 bg-white z-10 pointer-events-none -translate-x-1/2"
                     style={{ left: `${position}%` }}
                 >
-                    <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-blue2 rounded-full px-[0.65rem] py-1 text-[0.65rem] font-black whitespace-nowrap shadow-[0_4px_14px_rgba(0,0,0,0.4)] tracking-widest">
+                    <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-blue2 rounded-full px-[0.65rem] py-1 text-[0.65rem] font-black whitespace-nowrap shadow-[0_4px_14px_rgba(0,0,0,0.4)] tracking-widest pointer-events-none">
                         ⟨ ⟩
                     </span>
                 </div>
@@ -94,10 +64,10 @@ export function BeforeAfterSlider({
             {/* Labels */}
             <div className="flex justify-between px-4 py-[0.65rem] bg-glass">
                 <span className="text-[0.7rem] font-extrabold px-[0.65rem] py-1 rounded-full bg-[rgba(255,255,255,0.1)] text-muted tracking-wider">
-                    BEFORE
-                </span>
+                    AFTER ✦                </span>
                 <span className="text-[0.7rem] font-extrabold px-[0.65rem] py-1 rounded-full bg-[rgba(0,176,255,0.15)] text-ice tracking-wider">
-                    AFTER ✦
+                    BEFORE
+
                 </span>
             </div>
 

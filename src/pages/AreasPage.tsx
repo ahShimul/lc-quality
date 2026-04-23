@@ -112,8 +112,8 @@ export function AreasPage() {
             <Link to='/contact' className='btn-grad'>
               <i className='fas fa-clipboard-check' /> Get a Free Estimate
             </Link>
-            <a href='tel:6311112222' className='btn-ghost'>
-              <i className='fas fa-phone' /> 631-111-2222
+            <a href='tel:6316059477' className='btn-ghost'>
+              <i className='fas fa-phone' /> (631) 605-9477
             </a>
           </div>
         </div>

@@ -295,8 +295,8 @@ export function HomePage() {
             <Link to='/services' className='btn-ghost'>
               <i className='fas fa-layer-group' /> See Our Services
             </Link>
-            <a href='tel:6311112222' className='btn-ghost'>
-              <i className='fas fa-phone' /> 631-111-2222
+            <a href='tel:6316059477' className='btn-ghost'>
+              <i className='fas fa-phone' /> (631) 605-9477
             </a>
           </div>
 
@@ -717,24 +717,24 @@ export function HomePage() {
           <div className='grid grid-cols-3 gap-[1.4rem] max-[880px]:grid-cols-2 max-[560px]:grid-cols-1'>
             <div className='fi'>
               <BeforeAfterSlider
-                beforeSrc='/images/kitchen.jpg'
-                afterSrc='/images/kitchen.jpg'
+                beforeSrc='/images/kitchen-before.jpg'
+                afterSrc='/images/kitchen-after.jpg'
                 title='Kitchen Renovation — Stony Brook'
                 description='New cabinets, quartz counters & recessed lighting'
               />
             </div>
             <div className='fi'>
               <BeforeAfterSlider
-                beforeSrc='/images/bathroom.jpg'
-                afterSrc='/images/bathroom.jpg'
+                beforeSrc='/images/bathroom-before.jpg'
+                afterSrc='/images/bathroom-after.jpg'
                 title='Master Bathroom — Smithtown'
                 description='Walk-in shower, heated floors & custom tile'
               />
             </div>
             <div className='fi'>
               <BeforeAfterSlider
-                beforeSrc='/images/deck.png'
-                afterSrc='/images/deck.png'
+                beforeSrc='/images/deck-before.jpg'
+                afterSrc='/images/deck-after.jpg'
                 title='Composite Deck — Commack'
                 description='Multi-level deck with built-in bench & pergola'
               />
@@ -1201,13 +1201,13 @@ export function HomePage() {
                 {
                   icon: 'phone',
                   title: 'Phone',
-                  desc: '631-111-2222',
-                  href: 'tel:6311112222',
+                  desc: '(631) 605-9477',
+                  href: 'tel:6316059477',
                 },
                 {
                   icon: 'envelope',
                   title: 'Email',
-                  desc: 'info@lcqualityimprovements.com',
+                  desc: 'Lcqualityimprovements@gmail.com',
                 },
                 {
                   icon: 'clock',

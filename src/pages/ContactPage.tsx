@@ -39,8 +39,8 @@ export function ContactPage() {
                         Call or text for the fastest response, or send your project details through the form and I'll get back to you with next steps.
                     </p>
                     <div className="flex gap-[0.85rem] flex-wrap mt-6">
-                        <a href="tel:6311112222" className="btn-grad"><i className="fas fa-phone" /> Call 631-111-2222</a>
-                        <a href="sms:6311112222" className="btn-ghost"><i className="fas fa-comment" /> Text Us</a>
+                        <a href="tel:6316059477" className="btn-grad"><i className="fas fa-phone" /> Call (631) 605-9477</a>
+                        <a href="sms:6316059477" className="btn-ghost"><i className="fas fa-comment" /> Text Us</a>
                     </div>
                 </div>
             </section>
@@ -67,7 +67,7 @@ export function ContactPage() {
                                     <h2 className="text-[1.35rem] font-black text-white tracking-[-0.6px] mb-2">Call, Text, or Email</h2>
                                     <p className="text-muted text-[0.88rem] leading-[1.75]">For the fastest quote scheduling, call or text.</p>
                                     <div className="grid gap-2 mt-3">
-                                        {[{ href: "tel:6311112222", icon: "phone", label: "Phone:", value: "631-111-2222" }, { href: "sms:6311112222", icon: "comment", label: "Text:", value: "631-111-2222" }, { href: "mailto:info@lcqualityimprovements.com", icon: "envelope", label: "Email:", value: "info@lcqualityimprovements.com" }].map((c) => (
+                                        {[{ href: "tel:6316059477", icon: "phone", label: "Phone:", value: "(631) 605-9477" }, { href: "sms:6316059477", icon: "comment", label: "Text:", value: "(631) 605-9477" }, { href: "mailto:Lcqualityimprovements@gmail.com", icon: "envelope", label: "Email:", value: "Lcqualityimprovements@gmail.com" }].map((c) => (
                                             <a key={c.icon} href={c.href} className="flex gap-[0.6rem] items-start text-text text-[0.88rem] leading-[1.55]">
                                                 <i className={`fas fa-${c.icon} text-ice mt-[0.15rem]`} />
                                                 <div><strong>{c.label}</strong>&nbsp;{c.value}</div>

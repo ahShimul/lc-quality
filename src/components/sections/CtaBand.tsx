@@ -14,8 +14,8 @@ export function CtaBand({
     description = "Get your free, no-obligation estimate today. We'll come to you anywhere on Long Island.",
     primaryLabel = "Request Free Estimate",
     primaryTo = "/contact",
-    secondaryLabel = "Call 631-111-2222",
-    secondaryHref = "tel:6311112222",
+    secondaryLabel = "Call (631) 605-9477",
+    secondaryHref = "tel:6316059477",
 }: CtaBandProps) {
     return (
         <section className="bg-gradient-to-br from-[#0B1E40] via-blue to-ice py-[4.5rem] px-[6%] text-center relative overflow-hidden">

@@ -85,13 +85,13 @@ export function Footer() {
                         </h4>
                         <ul className="list-none">
                             <li className="mb-[0.45rem]">
-                                <a href="tel:6311112222" className="text-muted text-[0.82rem] transition-colors hover:text-ice">
-                                    631-111-2222
+                                <a href="tel:6316059477" className="text-muted text-[0.82rem] transition-colors hover:text-ice">
+                                    (631) 605-9477
                                 </a>
                             </li>
                             <li className="mb-[0.45rem]">
-                                <a href="mailto:info@lcqualityimprovements.com" className="text-muted text-[0.82rem] transition-colors hover:text-ice">
-                                    info@lcqualityimprovements.com
+                                <a href="mailto:Lcqualityimprovements@gmail.com" className="text-muted text-[0.82rem] transition-colors hover:text-ice">
+                                    Lcqualityimprovements@gmail.com
                                 </a>
                             </li>
                             <li className="mb-[0.45rem]">
