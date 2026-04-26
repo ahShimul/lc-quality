@@ -38,18 +38,18 @@ export function Navbar() {
     >
       <div className='max-w-[1320px] mx-auto px-[5%] flex items-center justify-between h-[68px]'>
         {/* Brand */}
-        <Link to='/' className='flex items-center gap-3 group'>
-          <div className='w-[34px] h-[34px] rounded-[9px] bg-accent flex items-center justify-center text-[16px] font-black text-bg shrink-0 transition-transform duration-300 group-hover:rotate-[-4deg]'>
-            L
-          </div>
-          <div className='leading-[1.15]'>
-            <div className='text-[14.5px] font-semibold text-ink tracking-[-0.01em]'>
-              LC Quality Improvements
-            </div>
-            <div className='text-[10.5px] text-muted tracking-[0.04em]'>
-              — est. Centereach, NY
-            </div>
-          </div>
+        <Link to='/' className='flex items-center gap-2 group'>
+          <img
+            src='/images/lc-quality-logo.png'
+            alt='LC Quality Improvements'
+            style={{
+              height: 42,
+              width: 'auto',
+              mixBlendMode: 'lighten',
+              transition: 'transform 0.3s ease',
+            }}
+            className='group-hover:scale-105'
+          />
         </Link>
 
         {/* Desktop nav */}
