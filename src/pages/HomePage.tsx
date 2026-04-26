@@ -1,1360 +1,557 @@
+import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { useFadeIn } from '../hooks/useFadeIn';
-import { BeforeAfterSlider } from '../components/sections/BeforeAfterSlider';
 import { AreasSection } from '../components/sections/AreasSection';
 import { CtaBand } from '../components/sections/CtaBand';
 
-const quickWins = [
-  {
-    icon: 'phone-volume',
-    title: 'Call Anytime',
-    desc: 'Mon – Sat, 7 AM – 7 PM',
-  },
-  {
-    icon: 'dollar-sign',
-    title: 'Free Estimates',
-    desc: 'No charge, no obligation',
-  },
-  {
-    icon: 'id-badge',
-    title: 'Fully Licensed',
-    desc: 'NY State licensed & insured',
-  },
-  {
-    icon: 'medal',
-    title: 'Warranty Included',
-    desc: 'Written warranty on every job',
-  },
-];
-
-const featuredServices = [
-  {
-    slug: 'kitchen-remodeling',
-    title: 'Kitchen Remodeling',
-    tag: 'Interior',
-    icon: 'utensils',
-    accentFrom: '#C45000',
-    accentTo: '#FF8C00',
-    img: '/images/kitchen.jpg',
-    desc: 'Complete kitchen remodels from layout and design to cabinets, countertops, and lighting — for Centereach and Long Island homeowners.',
-    bullets: [
-      'Full gut remodels & redesigns',
-      'Custom cabinets & islands',
-      'Quartz & granite countertops',
-      'Backsplash tile & recessed lighting',
-    ],
-    linkLabel: 'Get a kitchen estimate',
-  },
-  {
-    slug: 'bathroom-renovation',
-    title: 'Bathroom Renovation',
-    tag: 'Interior',
-    icon: 'shower',
-    accentFrom: '#006994',
-    accentTo: '#26C6DA',
-    img: '/images/bathroom.jpg',
-    desc: 'Bathroom renovations that upgrade tile, fixtures, and layouts — turning outdated spaces into clean, modern bathrooms.',
-    bullets: [
-      'Walk-in showers & glass enclosures',
-      'Floor & wall tile installation',
-      'Vanities, toilets & plumbing fixtures',
-      'Waterproofing & ventilation',
-    ],
-    linkLabel: 'Get a bathroom quote',
-  },
-  {
-    slug: 'basement-sump-pump-installation',
-    title: 'Basement Sump Pump Installation',
-    tag: 'Exterior',
-    icon: 'bolt',
-    accentFrom: '#8B6000',
-    accentTo: '#FFC107',
-    img: '/images/basement-sump-pump-installation.png',
-    desc: "Protect your basement from flooding with our expert sump pump installation services. We assess your basement's needs and install reliable pumps to keep your home dry.",
-    bullets: [
-      'Sump pump installation & replacement',
-      'Battery backup systems for power outages',
-      'Sump pit cleaning & maintenance',
-      'Waterproofing solutions to prevent leaks',
-    ],
-    linkLabel: 'Get a sump pump estimate',
-  },
-];
-
-const gridServices = [
-  {
-    slug: 'deck-outdoor',
-    icon: 'tree',
-    color: 'from-[#2E7D32] to-[#66BB6A]',
-    img: '/images/deck.jpg',
-    title: 'Deck Building & Outdoor Living',
-    desc: 'Custom wood and composite decks, pergolas, and railings built for Long Island weather.',
-    tag: 'Exterior',
-  },
-  {
-    slug: 'roofing',
-    icon: 'home',
-    color: 'from-[#1A237E] to-[#3949AB]',
-    img: '/images/roofing.jpg',
-    title: 'Exterior Repairs',
-    desc: 'Roof replacement, leak repair, gutters, and fascia to keep your home protected.',
-    tag: 'Exterior',
-  },
-  {
-    slug: 'flooring',
-    icon: 'th-large',
-    color: 'from-[#5D4037] to-[#A1887F]',
-    img: '/images/flooring.jpg',
-    title: 'Flooring Installation',
-    desc: 'Hardwood, luxury vinyl plank, and tile floors installed throughout your home.',
-    tag: 'Interior',
-  },
-  {
-    slug: 'basement-finishing',
-    icon: 'couch',
-    color: 'from-[#4A148C] to-[#7B1FA2]',
-    img: '/images/basement.jpg',
-    title: 'Basement Finishing',
-    desc: 'Turn unfinished basements into living rooms, home offices, gyms, or in-law suites.',
-    tag: 'Interior',
-  },
-  {
-    slug: 'doors-windows',
-    icon: 'door-open',
-    color: 'from-[#01579B] to-[#0288D1]',
-    img: '/images/living-room.jpg',
-    title: 'Doors & Windows',
-    desc: 'Energy-efficient replacements that improve comfort, curb appeal, and utility bills.',
-    tag: 'Exterior',
-  },
-  {
-    slug: 'painting',
-    icon: 'paint-roller',
-    color: 'from-[#B71C1C] to-[#E53935]',
-    img: '/images/painting.jpg',
-    title: 'Interior & Exterior Painting',
-    desc: 'Professional painting with proper prep, caulking, and premium products.',
-    tag: 'Interior • Exterior',
-  },
-];
-
 const reviews = [
   {
-    text: '"LC Quality transformed our kitchen completely. Respectful, clean, and the result is absolutely stunning."',
-    name: 'Maria R.',
-    loc: 'Smithtown, NY',
-    init: 'MR',
+    text: 'Luis is professional, punctual, knowledgeable — his prices and the quality of his work are second to none. He keeps you informed on every detail.',
+    name: 'Repeat Client',
+    loc: 'Kitchen + Bath · Stony Brook',
   },
   {
-    text: '"They showed up on time every day and finished on schedule. Our new deck is the talk of the neighborhood."',
-    name: 'James T.',
-    loc: 'Commack, NY',
-    init: 'JT',
+    text: 'Came to replace a floor joist and a kitchen header. Demo, install, sheetrock, spackle, paint — three visits and done. Already booking the next project.',
+    name: 'Michelle B.',
+    loc: 'Framing · Centereach',
   },
   {
-    text: '"Transparent pricing, great communication, and the tile work is perfection. Highly recommend."',
-    name: 'Sandra B.',
-    loc: 'Stony Brook, NY',
-    init: 'SB',
-  },
-  {
-    text: '"Basement finishing, electrical panel, and painting all done at once. Completely seamless."',
-    name: 'David L.',
-    loc: 'Hauppauge, NY',
-    init: 'DL',
-  },
-  {
-    text: '"Stress-free from estimate to walkthrough. I\'ve already referred them to three of my neighbors."',
-    name: 'Angela P.',
-    loc: 'Centereach, NY',
-    init: 'AP',
-  },
-  {
-    text: '"New roof, gutters, and windows — professional crew, outstanding quality. Best investment we\'ve made."',
-    name: 'Kevin M.',
-    loc: 'Ronkonkoma, NY',
-    init: 'KM',
+    text: 'Amazing quality work, very affordable, meticulous. We will be looking forward to the next project with LC.',
+    name: 'Christine O.',
+    loc: 'Plumbing · Port Jefferson',
   },
 ];
 
-const processSteps = [
+const faqItems = [
   {
-    num: '01',
-    icon: 'comments',
-    title: 'We Listen',
-    desc: 'Tell us your vision, timeline, and budget — zero pressure.',
+    q: 'Do you handle permits and inspections?',
+    a: "Yes — for any job that requires one. We pull the permit under our license, coordinate Town of Brookhaven (or your town) inspections, and hand you a closed permit at the end.",
   },
   {
-    num: '02',
-    icon: 'file-invoice-dollar',
-    title: 'Free Estimate',
-    desc: 'Written quote — clear pricing, no hidden costs.',
+    q: 'What areas do you serve?',
+    a: "All of Suffolk County and most of Nassau. If you're west of Huntington we'll still come out for additions and larger kitchen remodels.",
   },
   {
-    num: '03',
-    icon: 'pencil-ruler',
-    title: 'Design',
-    desc: "We help you choose materials and finishes you'll love.",
+    q: 'How do estimates work?',
+    a: 'Free, in-home, about an hour. We measure the space, talk through what you want, and send a written line-itemed quote within 48 hours. No pressure, no deposit to see the number.',
   },
   {
-    num: '04',
-    icon: 'hard-hat',
-    title: 'We Build',
-    desc: 'Licensed crew on-site, on time, with daily updates.',
+    q: 'Are you licensed and insured?',
+    a: "Licensed in Suffolk County (HIC license on request), fully insured with general liability and workers' comp. We'll provide current COIs before any hammer swings.",
   },
   {
-    num: '05',
-    icon: 'trophy',
-    title: 'Final Walkthrough',
-    desc: "You inspect every inch. We don't leave until you're happy.",
+    q: 'Do you use subcontractors?',
+    a: 'Occasionally for plumbing and electrical rough-ins, but only trusted tradespeople we\'ve worked with for years. Luis remains on-site and accountable for every aspect of your project.',
   },
 ];
 
-const compareRows = [
-  { feature: 'Licensed & Insured', us: '✔', chain: '✔', unlic: '✘' },
-  { feature: 'Free Written Estimate', us: '✔', chain: '✘', unlic: '✔' },
-  { feature: 'Local Long Island Team', us: '✔', chain: '✘', unlic: 'Varies' },
-  { feature: 'Transparent Pricing', us: '✔', chain: '✘', unlic: 'Varies' },
-  { feature: 'Written Warranty', us: '✔', chain: 'Limited', unlic: '✘' },
-  { feature: 'All Trades In-House', us: '✔', chain: '✘', unlic: '✘' },
-  { feature: 'One Point of Contact', us: '✔', chain: '✘', unlic: 'Varies' },
-  {
-    feature: '5-Star Google Reviews',
-    us: '✔ 150+',
-    chain: 'Mixed',
-    unlic: 'Few',
-  },
+const galleryItems = [
+  { cat: 'kitchen', code: 'K-014', title: 'Stony Brook kitchen', meta: 'White oak · Quartz', img: '/images/kitchen-after.jpg', col: 7, ratio: '16/10' },
+  { cat: 'basement', code: 'BA-009', title: 'Centereach basement', meta: 'Egress · wet bar', img: '/images/basement.jpg', col: 5, ratio: '4/5' },
+  { cat: 'bath', code: 'B-022', title: 'Port Jeff primary bath', meta: 'Porcelain slab', img: '/images/bathroom-after.jpg', col: 4, ratio: '1/1' },
+  { cat: 'floor', code: 'F-031', title: 'Ronkonkoma floors', meta: 'Red oak · site-finished', img: '/images/flooring.jpg', col: 4, ratio: '1/1' },
+  { cat: 'kitchen', code: 'K-018', title: 'Lake Grove kitchen', meta: 'Shaker · butcher block', img: '/images/kitchen.jpg', col: 4, ratio: '1/1' },
+  { cat: 'bath', code: 'B-025', title: 'Selden guest bath', meta: 'Tile · matte brass', img: '/images/bathroom.jpg', col: 5, ratio: '4/5' },
+  { cat: 'deck', code: 'D-007', title: 'Commack deck', meta: 'Composite · multi-level', img: '/images/deck-after.jpg', col: 7, ratio: '16/10' },
 ];
 
 export function HomePage() {
-  const fadeRef = useFadeIn();
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [budget, setBudget] = useState(40);
+  const [submitted, setSubmitted] = useState(false);
+  const [scope, setScope] = useState<string[]>([]);
+
+  const filtered = activeFilter === 'all' ? galleryItems : galleryItems.filter((g) => g.cat === activeFilter);
+
+  const toggleScope = (val: string) =>
+    setScope((prev) => prev.includes(val) ? prev.filter((v) => v !== val) : [...prev, val]);
+
+  const fmt = (v: number) => v >= 200 ? '$200k+' : `$${v}k`;
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitted(true);
+  };
 
   return (
-    <div ref={fadeRef}>
+    <>
       <Helmet>
-        <title>
-          LC Quality Improvements | Home Improvement Contractor Centereach NY
-        </title>
-        <meta
-          name='description'
-          content='LC Quality Improvements is a licensed home improvement contractor in Centereach, NY. Kitchens, bathrooms, decks, roofing, flooring & electrical for Long Island homes.'
-        />
+        <title>LC Quality Improvements — General Contractor, Long Island NY</title>
+        <meta name="description" content="Owner-operated general contractor in Centereach, NY. Kitchens, bathrooms, additions, basements, flooring & more across Suffolk County." />
       </Helmet>
 
-      {/* HERO */}
-      <section
-        className='relative min-h-screen pt-[68px] flex items-center justify-center text-center overflow-hidden'
-        style={{
-          background:
-            'linear-gradient(160deg, #060F1E 0%, #0C2040 55%, #091830 100%)',
-        }}
-      >
-        <div
-          className='absolute inset-0 z-0 bg-cover bg-center opacity-10'
-          style={{ backgroundImage: "url('/images/kitchen.jpg')" }}
-        />
-        <div
-          className='absolute w-[700px] h-[700px] -top-[200px] -right-[200px] rounded-full pointer-events-none'
-          style={{
-            background:
-              'radial-gradient(circle, rgba(0,176,255,0.14) 0%, transparent 65%)',
-          }}
-        />
-        <div
-          className='absolute w-[600px] h-[600px] -bottom-[220px] -left-[180px] rounded-full pointer-events-none'
-          style={{
-            background:
-              'radial-gradient(circle, rgba(21,101,192,0.16) 0%, transparent 65%)',
-          }}
-        />
-
-        <div className='relative z-10 max-w-[800px] w-[90%] mx-auto py-16'>
-          <div className='inline-flex items-center gap-2 bg-[rgba(0,176,255,0.1)] border border-[rgba(0,176,255,0.3)] px-4 py-[0.38rem] rounded-full text-[0.78rem] text-ice font-extrabold tracking-wider mb-6 fi'>
-            <i className='fas fa-shield-halved' /> Licensed • Insured • Long
-            Island Local
-          </div>
-
-          <h1 className='text-[clamp(2.6rem,6vw,4.6rem)] font-black leading-[1.06] tracking-[-2px] text-white mb-5 fi'>
-            Long Island's Trusted
-            <br />
-            <em className='not-italic text-ice'>Home Improvement Contractor</em>
-          </h1>
-
-          <p className='text-[1.1rem] text-muted leading-[1.78] max-w-[620px] mx-auto mb-9 fi'>
-            From kitchen remodels and bathroom renovations to decks, roofing,
-            electrical, and flooring — LC Quality Improvements delivers clean
-            workmanship and honest pricing for homeowners across Centereach and
-            all of Long Island.
-          </p>
-
-          <div className='flex gap-4 justify-center flex-wrap mb-11 fi'>
-            <Link to='/contact' className='btn-grad'>
-              <i className='fas fa-clipboard-check' /> Get a Free Estimate
-            </Link>
-            <Link to='/services' className='btn-ghost'>
-              <i className='fas fa-layer-group' /> See Our Services
-            </Link>
-            <a href='tel:6316059477' className='btn-ghost'>
-              <i className='fas fa-phone' /> (631) 605-9477
-            </a>
-          </div>
-
-          <div className='flex justify-center gap-5 flex-wrap px-7 py-5 bg-[rgba(255,255,255,0.04)] border border-gline rounded-[20px] mb-6 fi'>
-            {[
-              { icon: 'star', text: '5.0 Google Rating' },
-              { icon: 'hammer', text: '500+ Projects' },
-              { icon: 'clock', text: '24-Hour Response' },
-              { icon: 'file-signature', text: 'Written Estimates' },
-            ].map((t, i) => (
-              <span
-                key={i}
-                className='flex items-center gap-2 text-[0.85rem] font-bold text-text'
-              >
-                <i className={`fas fa-${t.icon} text-ice`} /> {t.text}
-              </span>
-            ))}
-          </div>
-
-          <div className='flex items-center justify-center gap-2 text-muted text-[0.82rem] fi'>
-            <i className='fas fa-location-dot text-ice' />
-            Based in Centereach, NY • Serving all of Nassau & Suffolk County
-          </div>
+      {/* ── HERO ── */}
+      <section className="hero" style={{ paddingTop: '104px' }}>
+        <div className="hero-bg" aria-hidden="true">
+          <div className="photo" style={{ backgroundImage: "url('/images/kitchen.jpg')" }} />
+          <div className="veil" />
+          <svg className="grid-lines" viewBox="0 0 1600 900" preserveAspectRatio="none" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', stroke: 'rgba(110,168,255,.06)', strokeWidth: 1, fill: 'none' }}>
+            <g>
+              <path d="M0 150 L1600 150"/><path d="M0 300 L1600 300"/><path d="M0 450 L1600 450"/>
+              <path d="M0 600 L1600 600"/><path d="M0 750 L1600 750"/>
+              <path d="M200 0 L200 900"/><path d="M400 0 L400 900"/><path d="M600 0 L600 900"/>
+              <path d="M800 0 L800 900"/><path d="M1000 0 L1000 900"/><path d="M1200 0 L1200 900"/>
+              <path d="M1400 0 L1400 900"/>
+            </g>
+          </svg>
+          <div className="blob b1" />
+          <div className="blob b2" />
+          <div className="blob b3" />
+          <div className="hero-marquee top">Built on Long Island &nbsp;·&nbsp; Built on Long Island &nbsp;·&nbsp; Built on Long Island &nbsp;·&nbsp;</div>
+          <div className="hero-marquee bot">Quality Improvements &nbsp;·&nbsp; Quality Improvements &nbsp;·&nbsp; Quality Improvements &nbsp;·&nbsp;</div>
         </div>
-      </section>
 
-      {/* QUICK WINS */}
-      <div className='bg-navy2 py-[2.4rem] px-[6%] border-b border-gline'>
-        <div className='max-w-[1180px] mx-auto grid grid-cols-4 gap-5 max-[900px]:grid-cols-2 max-[500px]:grid-cols-1 fi'>
-          {quickWins.map((qw) => (
-            <div
-              key={qw.title}
-              className='bg-[rgba(255,255,255,0.04)] border border-gline rounded-[18px] p-5 flex gap-3 items-start'
-            >
-              <div className='w-[42px] h-[42px] rounded-xl shrink-0 bg-gradient-to-br from-blue to-ice flex items-center justify-center text-white text-base'>
-                <i className={`fas fa-${qw.icon}`} />
+        <div className="wrap">
+          <div className="hero-grid">
+            <div>
+              <div className="eyebrow" style={{ color: 'var(--color-accent)' }}>⬡ &nbsp;General Contractor · Long Island, NY</div>
+              <h1 className="h-display" style={{ marginTop: 16 }}>
+                Homes built<br />
+                with a <em>craftsman's</em><br />
+                patience.
+              </h1>
+            </div>
+            <div className="hero-card">
+              <div>
+                <div className="eyebrow" style={{ marginBottom: 6 }}>Currently booking</div>
+                <h3>Spring &amp; Summer 2026 projects</h3>
               </div>
               <div>
-                <strong className='block font-extrabold text-white text-[0.92rem] mb-[0.15rem]'>
-                  {qw.title}
-                </strong>
-                <span className='text-[0.78rem] text-muted'>{qw.desc}</span>
+                <div className="row"><span>Kitchen remodels</span><b>3 wk lead</b></div>
+                <div className="row"><span>Bathroom renovations</span><b>2 wk lead</b></div>
+                <div className="row"><span>Additions &amp; framing</span><b>6 wk lead</b></div>
+                <div className="row"><span>Basement build-outs</span><b>4 wk lead</b></div>
               </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* SERVICES */}
-      <section
-        id='services'
-        className='relative py-20 px-[6%] bg-navy overflow-hidden'
-      >
-        {/* Ambient glow */}
-        <div
-          className='absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full pointer-events-none opacity-40'
-          style={{
-            background:
-              'radial-gradient(ellipse, rgba(21,101,192,0.12) 0%, transparent 70%)',
-          }}
-        />
-
-        <div className='max-w-[1220px] mx-auto relative z-10'>
-          {/* ── Section head ── */}
-          <div className='text-center mb-12 fi'>
-            <div className='inline-flex items-center gap-3 mb-3'>
-              <span
-                className='w-10 h-px'
-                style={{
-                  background: 'linear-gradient(to right, transparent, #00B0FF)',
-                }}
-              />
-              <span className='text-ice text-[0.72rem] font-extrabold tracking-[2.5px] uppercase'>
-                What We Do
-              </span>
-              <span
-                className='w-10 h-px'
-                style={{
-                  background: 'linear-gradient(to left, transparent, #00B0FF)',
-                }}
-              />
-            </div>
-            <h2 className='text-[clamp(1.75rem,3.5vw,2.65rem)] font-black text-white tracking-[-1px] leading-[1.14] mb-3'>
-              Home Improvement Services
-              <br />
-              <span className='text-ice'>Across Long Island</span>
-            </h2>
-            <p className='text-muted text-[0.96rem] leading-[1.75] max-w-[560px] mx-auto'>
-              Full-service interior remodeling, exterior upgrades, and licensed
-              electrical — all handled by our local Centereach, NY team.
-            </p>
-          </div>
-
-          {/* ── Bento featured grid ── */}
-          <div className='flex gap-4 mb-4 items-stretch max-[820px]:flex-col fi'>
-            {/* Kitchen — large cinematic card */}
-            <Link
-              to={`/services/${featuredServices[0].slug}`}
-              className='group relative overflow-hidden rounded-[22px] flex-none cursor-pointer'
-              style={{ width: '57%', minHeight: '480px' }}
-            >
-              <img
-                src={featuredServices[0].img}
-                alt={featuredServices[0].title}
-                className='absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.07]'
-              />
-              {/* Base dark vignette */}
-              <div
-                className='absolute inset-0'
-                style={{
-                  background:
-                    'linear-gradient(to top, rgba(4,9,20,0.97) 0%, rgba(4,9,20,0.45) 45%, rgba(4,9,20,0.12) 100%)',
-                }}
-              />
-              {/* Hover ice tint */}
-              <div
-                className='absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500'
-                style={{
-                  background:
-                    'linear-gradient(to top, rgba(0,176,255,0.14) 0%, transparent 55%)',
-                }}
-              />
-              {/* Glow border */}
-              <div
-                className='absolute inset-0 rounded-[22px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none'
-                style={{ boxShadow: 'inset 0 0 0 1.5px rgba(0,176,255,0.55)' }}
-              />
-              {/* Tag pill */}
-              <div
-                className='absolute top-4 left-4 text-[0.62rem] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full backdrop-blur-md'
-                style={{
-                  background: 'rgba(4,9,20,0.82)',
-                  border: '1px solid rgba(255,255,255,0.22)',
-                  color: 'rgba(210,235,255,0.95)',
-                }}
-              >
-                {featuredServices[0].tag}
-              </div>
-              {/* Ghost number */}
-              <span
-                className='absolute right-5 top-6 text-[7rem] font-black leading-none pointer-events-none select-none'
-                style={{
-                  color: 'rgba(255,255,255,0.045)',
-                  letterSpacing: '-4px',
-                }}
-              >
-                01
-              </span>
-              {/* Bottom content */}
-              <div className='absolute bottom-0 left-0 right-0 p-7'>
-                <div
-                  className='h-[3px] w-10 group-hover:w-20 rounded-full mb-3 transition-all duration-500'
-                  style={{
-                    background: `linear-gradient(90deg, ${featuredServices[0].accentFrom}, ${featuredServices[0].accentTo})`,
-                  }}
-                />
-                <h3 className='text-[1.5rem] font-black text-white leading-snug mb-2 transition-colors duration-200 group-hover:text-ice'>
-                  {featuredServices[0].title}
-                </h3>
-                <p
-                  className='text-[0.85rem] leading-relaxed mb-4 max-w-[380px] opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300'
-                  style={{ color: 'rgba(195,220,245,0.78)' }}
-                >
-                  {featuredServices[0].desc}
-                </p>
-                <div
-                  className='flex flex-wrap gap-[0.28rem] mb-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300'
-                  style={{ transitionDelay: '60ms' }}
-                >
-                  {featuredServices[0].bullets.map((b) => (
-                    <span
-                      key={b}
-                      className='inline-flex items-center gap-1 text-[0.62rem] font-semibold px-2 py-[0.2rem] rounded-md'
-                      style={{
-                        background: 'rgba(0,176,255,0.1)',
-                        border: '1px solid rgba(0,176,255,0.28)',
-                        color: 'rgba(170,215,255,0.9)',
-                      }}
-                    >
-                      <i className='fas fa-check text-[0.44rem] text-ice' />
-                      {b}
-                    </span>
-                  ))}
-                </div>
-                <span
-                  className='inline-flex items-center gap-2 text-[0.82rem] font-bold text-ice opacity-0 group-hover:opacity-100 transition-opacity duration-300'
-                  style={{ transitionDelay: '100ms' }}
-                >
-                  {featuredServices[0].linkLabel}
-                  <span className='flex items-center justify-center w-6 h-6 rounded-full bg-ice text-navy text-[0.58rem]'>
-                    <i className='fas fa-arrow-right' />
-                  </span>
-                </span>
-              </div>
-            </Link>
-
-            {/* Right column: Bathroom + Electrical stacked */}
-            <div className='flex flex-col gap-4 flex-1 max-[820px]:flex-row max-[560px]:flex-col'>
-              {[featuredServices[1], featuredServices[2]].map((svc, idx) => (
-                <Link
-                  key={svc.slug}
-                  to={`/services/${svc.slug}`}
-                  className='group relative overflow-hidden rounded-[22px] flex-1 cursor-pointer'
-                  style={{ minHeight: '225px' }}
-                >
-                  <img
-                    src={svc.img}
-                    alt={svc.title}
-                    className='absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.07]'
-                  />
-                  <div
-                    className='absolute inset-0'
-                    style={{
-                      background:
-                        'linear-gradient(to top, rgba(4,9,20,0.97) 0%, rgba(4,9,20,0.35) 55%, rgba(4,9,20,0.08) 100%)',
-                    }}
-                  />
-                  <div
-                    className='absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500'
-                    style={{
-                      background:
-                        'linear-gradient(to top, rgba(0,176,255,0.12) 0%, transparent 55%)',
-                    }}
-                  />
-                  <div
-                    className='absolute inset-0 rounded-[22px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none'
-                    style={{
-                      boxShadow: 'inset 0 0 0 1.5px rgba(0,176,255,0.5)',
-                    }}
-                  />
-                  {/* Tag */}
-                  <div
-                    className='absolute top-3 left-3 text-[0.6rem] font-extrabold uppercase tracking-wider px-[0.6rem] py-[0.22rem] rounded-full backdrop-blur-md'
-                    style={{
-                      background: 'rgba(4,9,20,0.82)',
-                      border: '1px solid rgba(255,255,255,0.2)',
-                      color: 'rgba(210,235,255,0.95)',
-                    }}
-                  >
-                    {svc.tag}
-                  </div>
-                  {/* Ghost number */}
-                  <span
-                    className='absolute right-4 top-3 text-[4.5rem] font-black leading-none pointer-events-none select-none'
-                    style={{
-                      color: 'rgba(255,255,255,0.04)',
-                      letterSpacing: '-3px',
-                    }}
-                  >
-                    0{idx + 2}
-                  </span>
-                  {/* Bottom content */}
-                  <div className='absolute bottom-0 left-0 right-0 p-5'>
-                    <div
-                      className='h-[2.5px] w-7 group-hover:w-12 rounded-full mb-2 transition-all duration-500'
-                      style={{
-                        background: `linear-gradient(90deg, ${svc.accentFrom}, ${svc.accentTo})`,
-                      }}
-                    />
-                    <h3 className='text-[1.05rem] font-black text-white leading-snug mb-1 transition-colors duration-200 group-hover:text-ice'>
-                      {svc.title}
-                    </h3>
-                    <p
-                      className='text-[0.77rem] leading-relaxed mb-3 opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300'
-                      style={{
-                        color: 'rgba(190,215,240,0.75)',
-                        transitionDelay: '40ms',
-                      }}
-                    >
-                      {svc.desc}
-                    </p>
-                    <span
-                      className='inline-flex items-center gap-1 text-[0.75rem] font-bold text-ice opacity-0 group-hover:opacity-100 transition-opacity duration-300'
-                      style={{ transitionDelay: '80ms' }}
-                    >
-                      {svc.linkLabel}{' '}
-                      <i className='fas fa-arrow-right text-[0.58rem]' />
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* ── Secondary services — 3-col image grid ── */}
-          <div className='grid grid-cols-3 gap-4 mb-6 max-[900px]:grid-cols-2 max-[560px]:grid-cols-1'>
-            {gridServices.map((svc, i) => (
-              <Link
-                key={svc.slug}
-                to={`/services/${svc.slug}`}
-                className='group relative overflow-hidden rounded-[20px] cursor-pointer fi'
-                style={{ height: '290px', transitionDelay: `${i * 55}ms` }}
-              >
-                <img
-                  src={svc.img}
-                  alt={svc.title}
-                  className='absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.08]'
-                />
-                {/* Dark scrim */}
-                <div
-                  className='absolute inset-0'
-                  style={{
-                    background:
-                      'linear-gradient(to top, rgba(4,9,20,0.97) 0%, rgba(4,9,20,0.25) 55%, rgba(4,9,20,0.06) 100%)',
-                  }}
-                />
-                {/* Hover ice tint */}
-                <div
-                  className='absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500'
-                  style={{
-                    background:
-                      'linear-gradient(to top, rgba(0,176,255,0.1) 0%, transparent 50%)',
-                  }}
-                />
-                {/* Glow border */}
-                <div
-                  className='absolute inset-0 rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none'
-                  style={{
-                    boxShadow: 'inset 0 0 0 1.5px rgba(0,176,255,0.45)',
-                  }}
-                />
-
-                {/* Top-left: colored icon badge */}
-                <div
-                  className={`absolute top-4 left-4 w-9 h-9 rounded-[11px] flex items-center justify-center text-white text-sm shadow-lg transition-transform duration-300 group-hover:scale-110 bg-gradient-to-br ${svc.color}`}
-                >
-                  <i className={`fas fa-${svc.icon}`} />
-                </div>
-                {/* Top-right: tag pill */}
-                <div
-                  className='absolute top-4 right-4 text-[0.58rem] font-extrabold uppercase tracking-wider px-2 py-[0.18rem] rounded-full backdrop-blur-md'
-                  style={{
-                    background: 'rgba(4,9,20,0.8)',
-                    border: '1px solid rgba(255,255,255,0.16)',
-                    color: 'rgba(200,225,255,0.85)',
-                  }}
-                >
-                  {svc.tag}
-                </div>
-
-                {/* Bottom content */}
-                <div className='absolute bottom-0 left-0 right-0 p-5'>
-                  <h3 className='text-[1rem] font-black text-white leading-snug mb-1 transition-colors duration-200 group-hover:text-ice'>
-                    {svc.title}
-                  </h3>
-                  <p
-                    className='text-[0.76rem] leading-relaxed mb-3 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300'
-                    style={{
-                      color: 'rgba(185,210,238,0.72)',
-                      transitionDelay: '40ms',
-                    }}
-                  >
-                    {svc.desc}
-                  </p>
-                  <div
-                    className='flex items-center gap-[0.4rem] text-[0.72rem] font-bold text-ice -translate-x-1 group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-250'
-                    style={{ transitionDelay: '80ms' }}
-                  >
-                    View Service{' '}
-                    <i className='fas fa-arrow-right text-[0.58rem]' />
-                  </div>
-                </div>
+              <Link to="/contact" className="btn-primary">
+                <span>Request a free estimate</span>
+                <span>→</span>
               </Link>
-            ))}
+            </div>
           </div>
 
-          {/* ── SEO / area strip ── */}
-          <div
-            className='relative overflow-hidden p-6 rounded-[22px] border border-gline flex items-center justify-between gap-6 flex-wrap max-[700px]:flex-col fi'
-            style={{
-              background:
-                'linear-gradient(135deg, rgba(21,101,192,0.14), rgba(0,176,255,0.06))',
-            }}
-          >
-            <div
-              className='absolute inset-0 pointer-events-none'
-              style={{
-                background:
-                  'radial-gradient(ellipse at 0% 50%, rgba(21,101,192,0.2), transparent 55%)',
-                borderRadius: 'inherit',
-              }}
-            />
-            <div
-              className='absolute inset-0 rounded-[22px] pointer-events-none'
-              style={{ boxShadow: 'inset 0 0 0 1px rgba(0,176,255,0.12)' }}
-            />
-            <div className='relative z-10'>
-              <h3 className='text-[0.98rem] font-black text-white mb-1'>
-                Don't see your project? We probably handle it.
-              </h3>
-              <p className='text-[0.84rem] text-muted max-w-[540px] leading-[1.7]'>
-                We serve Centereach, Selden, Stony Brook, Smithtown, Hauppauge,
-                Commack, Ronkonkoma, and all of Long Island.
-              </p>
-            </div>
-            <Link to='/contact' className='btn-grad shrink-0 relative z-10'>
-              <i className='fas fa-paper-plane' /> Describe your project
-            </Link>
+          <div className="hero-meta">
+            <div><div className="mono">Owner / Lead</div>Luis Curillo</div>
+            <div><div className="mono">Service area</div>Suffolk &amp; Nassau County</div>
+            <div><div className="mono">Specialty</div>Additions &amp; Kitchen Remodels</div>
+            <div><div className="mono">Since</div>2014 · 120+ homes</div>
           </div>
-        </div>
-      </section>
 
-      {/* BEFORE / AFTER */}
-      <section id='transformations' className='py-20 px-[6%] bg-navy2'>
-        <div className='max-w-[1180px] mx-auto'>
-          <div className='text-center mb-11 fi'>
-            <div className='inline-block text-ice text-[0.72rem] font-extrabold tracking-[2px] uppercase mb-2'>
-              Real Results
+          <div className="hero-strip">
+            <div className="shot">
+              <img src="/images/kitchen-after.jpg" alt="Kitchen renovation" />
+              <div className="tag"><span className="idx">01</span><span>kitchen · oak + quartz</span></div>
             </div>
-            <h2 className='text-[clamp(1.75rem,3.5vw,2.65rem)] font-black text-white tracking-[-1px] leading-[1.14] mb-3'>
-              Before & After Transformations
-            </h2>
-            <p className='text-muted text-[0.96rem] leading-[1.75] max-w-[560px] mx-auto'>
-              Drag the slider on each photo to see the difference. Real Long
-              Island homes.
-            </p>
-          </div>
-          <div className='grid grid-cols-3 gap-[1.4rem] max-[880px]:grid-cols-2 max-[560px]:grid-cols-1'>
-            <div className='fi'>
-              <BeforeAfterSlider
-                beforeSrc='/images/kitchen-before.jpg'
-                afterSrc='/images/kitchen-after.jpg'
-                title='Kitchen Renovation — Stony Brook'
-                description='New cabinets, quartz counters & recessed lighting'
-              />
+            <div className="shot">
+              <img src="/images/bathroom-after.jpg" alt="Bathroom renovation" />
+              <div className="tag"><span className="idx">02</span><span>bath · walk-in shower</span></div>
             </div>
-            <div className='fi'>
-              <BeforeAfterSlider
-                beforeSrc='/images/bathroom-before.jpg'
-                afterSrc='/images/bathroom-after.jpg'
-                title='Master Bathroom — Smithtown'
-                description='Walk-in shower, heated floors & custom tile'
-              />
+            <div className="shot">
+              <img src="/images/deck-after.jpg" alt="Deck project" />
+              <div className="tag"><span className="idx">03</span><span>deck · composite</span></div>
             </div>
-            <div className='fi'>
-              <BeforeAfterSlider
-                beforeSrc='/images/deck-before.jpg'
-                afterSrc='/images/deck-after.jpg'
-                title='Composite Deck — Commack'
-                description='Multi-level deck with built-in bench & pergola'
-              />
+            <div className="shot">
+              <img src="/images/basement.jpg" alt="Basement finishing" />
+              <div className="tag"><span className="idx">04</span><span>basement · legal egress</span></div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* PROCESS */}
-      <section
-        id='process'
-        className='relative py-20 px-[6%] bg-navy overflow-hidden'
-      >
-        {/* Ambient glow */}
-        <div
-          className='absolute bottom-0 right-1/4 w-[600px] h-[500px] rounded-full pointer-events-none'
-          style={{
-            background:
-              'radial-gradient(ellipse, rgba(0,176,255,0.06) 0%, transparent 70%)',
-          }}
-        />
-
-        <div className='max-w-[1180px] mx-auto relative z-10'>
-          {/* ── Section head ── */}
-          <div className='text-center mb-10 fi'>
-            <div className='inline-flex items-center gap-3 mb-3'>
-              <span
-                className='w-10 h-px'
-                style={{
-                  background: 'linear-gradient(to right, transparent, #00B0FF)',
-                }}
-              />
-              <span className='text-ice text-[0.72rem] font-extrabold tracking-[2.5px] uppercase'>
-                How It Works
-              </span>
-              <span
-                className='w-10 h-px'
-                style={{
-                  background: 'linear-gradient(to left, transparent, #00B0FF)',
-                }}
-              />
+      {/* ── SERVICES ── */}
+      <section id="services" style={{ background: 'var(--color-bg)', padding: '96px 0', borderTop: '1px solid var(--color-line)' }}>
+        <div className="wrap">
+          <div className="sec-head reveal">
+            <div>
+              <div className="sec-num">001 / Services</div>
+              <h2 className="h-section">A full-service shop<br />for <em>every room</em> in the house.</h2>
             </div>
-            <h2 className='text-[clamp(1.75rem,3.5vw,2.65rem)] font-black text-white tracking-[-1px] leading-[1.14] mb-3'>
-              Simple 5-Step Process
-            </h2>
-            <p className='text-muted text-[0.96rem] leading-[1.75] max-w-[560px] mx-auto'>
-              No guesswork, no stress. Here's exactly what to expect from your
-              first call to the final walkthrough.
-            </p>
+            <div className="lead">
+              <p>LC is owner-operated. Luis runs every job on site, from first demo to the final trim — so the person who scoped it is the person holding the level.</p>
+            </div>
           </div>
 
-          {/* ── Horizontal sequential tracker ── */}
-          <div className='relative flex items-start justify-between mb-10 px-2 fi max-[700px]:hidden'>
-            {/* Track line */}
-            <div
-              className='absolute left-[18px] right-[18px] top-[18px] h-px'
-              style={{
-                background:
-                  'linear-gradient(to right, rgba(0,176,255,0.5) 0%, rgba(0,176,255,0.5) 80%, rgba(0,176,255,0.15) 100%)',
-              }}
-            />
-            {processSteps.map((s, i) => (
-              <div
-                key={s.num}
-                className='relative z-10 flex flex-col items-center gap-[0.45rem]'
-                style={{ width: '20%' }}
-              >
-                <div
-                  className='w-9 h-9 rounded-full flex items-center justify-center text-[0.78rem] font-black border-2 transition-all duration-200'
-                  style={{
-                    background: i === 4 ? '#00B0FF' : '#05101F',
-                    borderColor: '#00B0FF',
-                    color: i === 4 ? '#05101F' : '#00B0FF',
-                    boxShadow:
-                      i === 4 ? '0 0 16px rgba(0,176,255,0.5)' : undefined,
-                  }}
-                >
-                  {s.num}
-                </div>
-                <span className='text-[0.68rem] font-bold text-muted text-center leading-snug'>
-                  {s.title}
+          <div className="services-grid reveal">
+            <Link to="/services/kitchen-remodeling" className="scard span-3 tall accent-card">
+              <div>
+                <div className="s-num">01 &nbsp;·&nbsp; Signature</div>
+                <svg className="s-ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <rect x="4" y="14" width="40" height="26"/><rect x="4" y="22" width="40" height="4" fill="currentColor" opacity=".18"/>
+                  <path d="M4 14 L24 4 L44 14"/><path d="M14 40 V28 M24 40 V28 M34 40 V28"/>
+                </svg>
+                <h3 className="s-title">Kitchen <em>Remodels</em></h3>
+                <p className="s-desc">Our most requested work. Cabinets, stone counters, tile, headers, lighting, electrical — scoped and delivered turnkey by a single small crew.</p>
+              </div>
+              <div className="s-foot">
+                <div className="s-meta"><b>3–6 weeks</b><span>from $28k</span></div>
+                <span className="s-more">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M2 7h10M7 2l5 5-5 5"/></svg>
                 </span>
               </div>
-            ))}
+              <svg className="s-pattern" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth=".5">
+                <circle cx="50" cy="50" r="48"/><circle cx="50" cy="50" r="36"/><circle cx="50" cy="50" r="24"/><circle cx="50" cy="50" r="12"/>
+              </svg>
+            </Link>
+
+            <Link to="/services/bathroom-renovation" className="scard span-3 tall">
+              <div>
+                <div className="s-num">02 &nbsp;·&nbsp; Signature</div>
+                <svg className="s-ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <rect x="6" y="10" width="36" height="28" rx="2"/>
+                  <path d="M12 22 Q18 18 24 22 T36 22"/>
+                  <circle cx="14" cy="32" r="1.5" fill="currentColor"/>
+                  <circle cx="34" cy="32" r="1.5" fill="currentColor"/>
+                </svg>
+                <h3 className="s-title">Bathroom <em>Renovations</em></h3>
+                <p className="s-desc">Custom tile, walk-in showers, vanities, full re-plumbs. Built to last — and to look exactly how you pictured it.</p>
+              </div>
+              <div className="s-foot">
+                <div className="s-meta"><b>2–4 weeks</b><span>from $14k</span></div>
+                <span className="s-more">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M2 7h10M7 2l5 5-5 5"/></svg>
+                </span>
+              </div>
+              <svg className="s-pattern" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth=".5">
+                <path d="M10 90 L50 10 L90 90 Z"/><path d="M20 90 L50 30 L80 90"/><path d="M30 90 L50 50 L70 90"/>
+              </svg>
+            </Link>
+
+            <Link to="/services/basement-finishing" className="scard span-2">
+              <div>
+                <div className="s-num">03</div>
+                <svg className="s-ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M4 16 H44 V40 H4 Z"/><path d="M4 16 L24 4 L44 16"/>
+                  <rect x="20" y="22" width="8" height="18"/>
+                </svg>
+                <h3 className="s-title">Basements</h3>
+                <p className="s-desc">Legal egress, framing, insulation, drywall, flooring — full build-outs.</p>
+              </div>
+              <div className="s-foot"><div className="s-meta"><b>4–8 wks</b><span>from $22k</span></div></div>
+            </Link>
+
+            <Link to="/services/flooring" className="scard span-2 dark">
+              <div>
+                <div className="s-num">04</div>
+                <svg className="s-ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <rect x="4" y="8" width="40" height="8"/><rect x="4" y="20" width="40" height="8"/>
+                  <rect x="4" y="32" width="40" height="8"/>
+                  <path d="M14 8 V16 M26 20 V28 M34 32 V40"/>
+                </svg>
+                <h3 className="s-title">Flooring</h3>
+                <p className="s-desc">Hardwood, LVP, porcelain, natural stone — precision installation.</p>
+              </div>
+              <div className="s-foot"><div className="s-meta"><b>1–2 wks</b><span>per sq ft</span></div></div>
+            </Link>
+
+            <Link to="/services/deck-outdoor" className="scard span-2">
+              <div>
+                <div className="s-num">05</div>
+                <svg className="s-ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M4 20 H44 V40 H4 Z"/><path d="M4 20 L24 8 L44 20"/>
+                  <path d="M10 40 V28 M20 40 V28 M30 40 V28 M40 40 V28"/>
+                </svg>
+                <h3 className="s-title">Decks &amp; Outdoor</h3>
+                <p className="s-desc">Custom wood and composite decks, pergolas, and railings for Long Island weather.</p>
+              </div>
+              <div className="s-foot"><div className="s-meta"><b>2–4 wks</b><span>quote on scope</span></div></div>
+            </Link>
+
+            <Link to="/services/roofing" className="scard span-3">
+              <div>
+                <div className="s-num">06 &nbsp;·&nbsp; Exterior</div>
+                <svg className="s-ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M4 24 L24 4 L44 24"/><path d="M8 24 V44 H40 V24"/>
+                  <rect x="18" y="28" width="12" height="16"/>
+                  <path d="M4 24 H8 M40 24 H44"/>
+                </svg>
+                <h3 className="s-title">Exterior &amp; <em>Roofing</em></h3>
+                <p className="s-desc">Roof replacement, leak repair, gutters, fascia, and siding. Everything that keeps your home protected from the outside in.</p>
+              </div>
+              <div className="s-foot"><div className="s-meta"><b>1–2 weeks</b><span>quote on scope</span></div></div>
+            </Link>
+
+            <Link to="/services/painting" className="scard span-3">
+              <div>
+                <div className="s-num">07 &nbsp;·&nbsp; Finish work</div>
+                <svg className="s-ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <rect x="6" y="6" width="36" height="36"/>
+                  <path d="M6 6 L42 42 M42 6 L6 42" opacity=".3"/>
+                  <circle cx="24" cy="24" r="8"/>
+                </svg>
+                <h3 className="s-title">Interior &amp; Exterior <em>Painting</em></h3>
+                <p className="s-desc">Proper prep, caulking, and premium products. The small moves that make a house feel finished.</p>
+              </div>
+              <div className="s-foot"><div className="s-meta"><b>Varies</b><span>project-based</span></div></div>
+            </Link>
           </div>
 
-          {/* ── Bento grid ── */}
-          <div className='grid grid-cols-3 gap-5 items-stretch max-[900px]:grid-cols-1'>
-            {/* Steps 01–04: 2×2 sub-grid */}
-            <div className='col-span-2 grid grid-cols-2 gap-5 max-[600px]:grid-cols-1'>
-              {processSteps.slice(0, 4).map((s) => (
-                <div
-                  key={s.num}
-                  className='group relative bg-[rgba(255,255,255,0.04)] border border-gline rounded-[22px] p-7 flex flex-col gap-5 transition-all duration-300 hover:-translate-y-1 hover:border-[rgba(0,176,255,0.4)] hover:shadow-[0_20px_48px_rgba(0,0,0,0.55)] fi'
-                >
-                  {/* Hover glow overlay */}
-                  <div
-                    className='absolute inset-0 rounded-[22px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none'
-                    style={{
-                      background:
-                        'radial-gradient(ellipse at 0% 0%, rgba(0,176,255,0.06), transparent 60%)',
-                    }}
-                  />
-
-                  {/* Icon circle — reference style */}
-                  <div
-                    className='w-[52px] h-[52px] rounded-full flex items-center justify-center border-2 transition-all duration-300 group-hover:border-ice group-hover:shadow-[0_0_18px_rgba(0,176,255,0.3)]'
-                    style={{
-                      borderColor: 'rgba(0,176,255,0.3)',
-                      background: 'rgba(0,176,255,0.06)',
-                    }}
-                  >
-                    <i className={`fas fa-${s.icon} text-ice text-[1.05rem]`} />
-                  </div>
-
-                  <div className='relative z-10'>
-                    <div className='text-[0.6rem] font-black text-ice uppercase tracking-[2.5px] mb-2'>
-                      Step {s.num}
-                    </div>
-                    <h3 className='text-[1.06rem] font-black text-white mb-2 leading-snug transition-colors duration-200 group-hover:text-ice'>
-                      {s.title}
-                    </h3>
-                    <p className='text-[0.83rem] text-muted leading-[1.65]'>
-                      {s.desc}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Step 05 — Featured highlighted card */}
-            <div
-              className='relative overflow-hidden rounded-[22px] p-8 flex flex-col fi'
-              style={{
-                background:
-                  'linear-gradient(155deg, #0D47A1 0%, #0a2d6e 50%, #061d4a 100%)',
-                border: '1px solid rgba(0,176,255,0.28)',
-                minHeight: '420px',
-              }}
-            >
-              {/* Radial bloom */}
-              <div
-                className='absolute inset-0 pointer-events-none'
-                style={{
-                  background:
-                    'radial-gradient(ellipse at 15% 85%, rgba(0,176,255,0.22), transparent 60%)',
-                }}
-              />
-              {/* Corner glow top-right */}
-              <div
-                className='absolute top-0 right-0 w-40 h-40 rounded-full pointer-events-none'
-                style={{
-                  background:
-                    'radial-gradient(circle, rgba(0,176,255,0.12), transparent 70%)',
-                }}
-              />
-
-              <div className='relative z-10 flex flex-col h-full'>
-                {/* Step badge row */}
-                <div className='flex items-center gap-3 mb-7'>
-                  <div
-                    className='w-9 h-9 rounded-full flex items-center justify-center text-[0.78rem] font-black'
-                    style={{
-                      background: '#00B0FF',
-                      color: '#05101F',
-                      boxShadow: '0 0 20px rgba(0,176,255,0.5)',
-                    }}
-                  >
-                    05
-                  </div>
-                  <span
-                    className='text-[0.68rem] font-extrabold uppercase tracking-[2px]'
-                    style={{ color: 'rgba(0,176,255,0.8)' }}
-                  >
-                    Final Step
-                  </span>
-                </div>
-
-                {/* Icon circle */}
-                <div
-                  className='w-14 h-14 rounded-full border-2 border-ice flex items-center justify-center mb-6'
-                  style={{
-                    background: 'rgba(0,176,255,0.14)',
-                    boxShadow: '0 0 24px rgba(0,176,255,0.25)',
-                  }}
-                >
-                  <i className='fas fa-trophy text-ice text-xl' />
-                </div>
-
-                <h3 className='text-[1.65rem] font-black text-white leading-snug mb-4'>
-                  {processSteps[4].title}
-                </h3>
-                <p
-                  className='text-[0.88rem] leading-[1.72] mb-4'
-                  style={{ color: 'rgba(200,225,250,0.82)' }}
-                >
-                  {processSteps[4].desc}
-                </p>
-                <p
-                  className='text-[0.83rem] leading-[1.7]'
-                  style={{ color: 'rgba(170,200,235,0.58)' }}
-                >
-                  Whether you're remodeling a kitchen or finishing a basement —
-                  you inspect every detail before we close out. Your
-                  satisfaction is the only sign-off we need.
-                </p>
-
-                <div className='mt-auto pt-8'>
-                  <Link
-                    to='/contact'
-                    className='btn-grad w-full justify-center'
-                  >
-                    <i className='fas fa-clipboard-check' /> Start Your Project
-                  </Link>
-                </div>
-              </div>
-            </div>
+          <div style={{ marginTop: 32, textAlign: 'center' }}>
+            <Link to="/services" className="btn-ghost">View all services →</Link>
           </div>
         </div>
       </section>
 
-      {/* COMPARE */}
-      <section id='compare' className='py-20 px-[6%] bg-navy2'>
-        <div className='max-w-[1180px] mx-auto'>
-          <div className='text-center mb-11 fi'>
-            <div className='inline-block text-ice text-[0.72rem] font-extrabold tracking-[2px] uppercase mb-2'>
-              Why Choose Us
+      {/* ── PROCESS ── */}
+      <section id="process" style={{ background: 'var(--color-bg-2)', padding: '96px 0', borderTop: '1px solid var(--color-line)' }}>
+        <div className="wrap">
+          <div className="sec-head reveal">
+            <div>
+              <div className="sec-num">002 / Process</div>
+              <h2 className="h-section">Four steps.<br />No <em>surprises</em>.</h2>
             </div>
-            <h2 className='text-[clamp(1.75rem,3.5vw,2.65rem)] font-black text-white tracking-[-1px] leading-[1.14] mb-3'>
-              LC Quality vs. The Other Guys
-            </h2>
-            <p className='text-muted text-[0.96rem] leading-[1.75] max-w-[560px] mx-auto'>
-              See why Long Island homeowners trust us over big chains and
-              unlicensed crews.
-            </p>
-          </div>
-          <div className='overflow-x-auto rounded-3xl border border-gline fi'>
-            <table className='w-full border-collapse min-w-[540px]'>
-              <thead>
-                <tr>
-                  <th className='p-[0.85rem] text-left text-[0.78rem] font-extrabold uppercase tracking-wider bg-blue2 text-white'>
-                    What You Get
-                  </th>
-                  <th className='p-[0.85rem] text-center text-[0.78rem] font-extrabold uppercase tracking-wider bg-gradient-to-br from-blue to-ice text-white'>
-                    LC Quality ✦
-                  </th>
-                  <th className='p-[0.85rem] text-center text-[0.78rem] font-extrabold uppercase tracking-wider bg-blue2 text-white'>
-                    Big-Box Chains
-                  </th>
-                  <th className='p-[0.85rem] text-center text-[0.78rem] font-extrabold uppercase tracking-wider bg-blue2 text-white'>
-                    Unlicensed Crew
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {compareRows.map((row, i) => (
-                  <tr
-                    key={row.feature}
-                    className={
-                      i % 2 === 1 ? 'bg-[rgba(255,255,255,0.024)]' : ''
-                    }
-                  >
-                    <td className='p-[0.85rem] text-left text-[0.86rem] border-b border-[rgba(255,255,255,0.06)]'>
-                      {row.feature}
-                    </td>
-                    <td className='p-[0.85rem] text-center text-[0.86rem] border-b border-[rgba(255,255,255,0.06)] bg-[rgba(0,176,255,0.07)]'>
-                      <span
-                        className={
-                          row.us.includes('✔')
-                            ? 'text-[#00E676]'
-                            : 'text-[#FF5252]'
-                        }
-                      >
-                        {row.us}
-                      </span>
-                    </td>
-                    <td className='p-[0.85rem] text-center text-[0.86rem] border-b border-[rgba(255,255,255,0.06)]'>
-                      <span
-                        className={
-                          row.chain === '✔'
-                            ? 'text-[#00E676]'
-                            : row.chain === '✘'
-                              ? 'text-[#FF5252]'
-                              : 'text-muted'
-                        }
-                      >
-                        {row.chain}
-                      </span>
-                    </td>
-                    <td className='p-[0.85rem] text-center text-[0.86rem] border-b border-[rgba(255,255,255,0.06)]'>
-                      <span
-                        className={
-                          row.unlic === '✔'
-                            ? 'text-[#00E676]'
-                            : row.unlic === '✘'
-                              ? 'text-[#FF5252]'
-                              : 'text-muted'
-                        }
-                      >
-                        {row.unlic}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      {/* REVIEWS */}
-      <section id='reviews' className='py-20 bg-navy overflow-hidden'>
-        {/* Section head */}
-        <div className='px-[6%] text-center mb-11 fi'>
-          <div className='inline-flex items-center gap-3 mb-3'>
-            <span
-              className='w-10 h-px'
-              style={{
-                background: 'linear-gradient(to right, transparent, #00B0FF)',
-              }}
-            />
-            <span className='text-ice text-[0.72rem] font-extrabold tracking-[2.5px] uppercase'>
-              Testimonials
-            </span>
-            <span
-              className='w-10 h-px'
-              style={{
-                background: 'linear-gradient(to left, transparent, #00B0FF)',
-              }}
-            />
-          </div>
-          <h2 className='text-[clamp(1.75rem,3.5vw,2.65rem)] font-black text-white tracking-[-1px] leading-[1.14] mb-3'>
-            Homeowners Love the Results
-          </h2>
-          <p className='text-muted text-[0.96rem] leading-[1.75] max-w-[560px] mx-auto'>
-            Over 150 five-star reviews from real Long Island homeowners.
-          </p>
-        </div>
-
-        {/* Marquee wrapper — fade edges so centre stays in focus */}
-        <div
-          className='relative'
-          style={{
-            maskImage:
-              'linear-gradient(to right, transparent 0%, black 16%, black 84%, transparent 100%)',
-            WebkitMaskImage:
-              'linear-gradient(to right, transparent 0%, black 16%, black 84%, transparent 100%)',
-          }}
-        >
-          {/* Row 1 — scrolls left */}
-          <div
-            className='flex gap-5 mb-5'
-            style={{
-              width: 'max-content',
-              animation: 'marquee 50s linear infinite',
-            }}
-          >
-            {[...reviews, ...reviews].map((r, i) => (
-              <div
-                key={i}
-                className='bg-glass border border-gline rounded-3xl p-6 flex flex-col shrink-0'
-                style={{ width: '340px' }}
-              >
-                <div className='text-[#FFD740] text-[0.85rem] tracking-widest mb-3'>
-                  ★★★★★
-                </div>
-                <p className='text-[0.84rem] text-muted leading-[1.72] italic mb-5 flex-1'>
-                  {r.text}
-                </p>
-                <div className='flex items-center gap-3'>
-                  <div
-                    className='w-9 h-9 rounded-full flex items-center justify-center font-black text-[0.82rem] text-white shrink-0'
-                    style={{
-                      background: 'linear-gradient(135deg, #1565C0, #00B0FF)',
-                    }}
-                  >
-                    {r.init}
-                  </div>
-                  <div>
-                    <div className='font-extrabold text-[0.86rem] text-white'>
-                      {r.name}
-                    </div>
-                    <div className='text-[0.72rem] text-muted'>{r.loc}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
+            <div className="lead">
+              <p>Most homeowners we meet have been burned by a contractor before. Our process is built to be the opposite of that — transparent quotes, weekly site walks, written change orders.</p>
+            </div>
           </div>
 
-          {/* Row 2 — scrolls right (opposite direction) */}
-          <div
-            className='flex gap-5'
-            style={{
-              width: 'max-content',
-              animation: 'marquee-rev 65s linear infinite',
-            }}
-          >
+          <div className="process-grid reveal">
             {[
-              ...reviews.slice(3),
-              ...reviews.slice(0, 3),
-              ...reviews.slice(3),
-              ...reviews.slice(0, 3),
-            ].map((r, i) => (
-              <div
-                key={i}
-                className='bg-glass border border-gline rounded-3xl p-6 flex flex-col shrink-0'
-                style={{ width: '340px' }}
-              >
-                <div className='text-[#FFD740] text-[0.85rem] tracking-widest mb-3'>
-                  ★★★★★
+              { n: 'i.', title: 'Walk-through', desc: 'We visit the home, measure, listen, and write up the scope together. Usually an hour.', note: 'Free · 60 min' },
+              { n: 'ii.', title: 'Written quote', desc: 'Line-itemed estimate within 48 hours. Labor and materials separate. No vague "allowances".', note: 'Within 48 hrs' },
+              { n: 'iii.', title: 'Build', desc: 'Daily site protection, end-of-week photo update, written change orders if anything shifts.', note: '2–14 wks' },
+              { n: 'iv.', title: 'Walk & warrant', desc: 'Final punch list walk together. One-year workmanship warranty on everything we touch.', note: '1-yr warranty' },
+            ].map((s) => (
+              <div key={s.n} className="step">
+                <div>
+                  <div className="step-n">{s.n}</div>
+                  <h4>{s.title}</h4>
+                  <p>{s.desc}</p>
                 </div>
-                <p className='text-[0.84rem] text-muted leading-[1.72] italic mb-5 flex-1'>
-                  {r.text}
-                </p>
-                <div className='flex items-center gap-3'>
-                  <div
-                    className='w-9 h-9 rounded-full flex items-center justify-center font-black text-[0.82rem] text-white shrink-0'
-                    style={{
-                      background: 'linear-gradient(135deg, #1565C0, #00B0FF)',
-                    }}
-                  >
-                    {r.init}
-                  </div>
-                  <div>
-                    <div className='font-extrabold text-[0.86rem] text-white'>
-                      {r.name}
-                    </div>
-                    <div className='text-[0.72rem] text-muted'>{r.loc}</div>
-                  </div>
+                <div className="mono" style={{ fontSize: '10.5px', letterSpacing: '.1em', color: 'var(--color-muted)', textTransform: 'uppercase' }}>{s.note}</div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ marginTop: 32, textAlign: 'center' }}>
+            <Link to="/process" className="btn-ghost">See our full process →</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── WORK / GALLERY ── */}
+      <section id="work" style={{ background: 'var(--color-bg)', padding: '96px 0', borderTop: '1px solid var(--color-line)' }}>
+        <div className="wrap">
+          <div className="sec-head reveal">
+            <div>
+              <div className="sec-num">003 / Selected Work</div>
+              <h2 className="h-section">Recent projects,<br /><em>honest</em> documentation.</h2>
+            </div>
+            <div className="lead">
+              <p>A small slice of the last two years. Filter by category — every project is a real home on Long Island, photographed after final walk-through.</p>
+            </div>
+          </div>
+
+          <div className="filter-bar reveal" role="tablist">
+            {[
+              { val: 'all', label: 'All work' },
+              { val: 'kitchen', label: 'Kitchens' },
+              { val: 'bath', label: 'Bathrooms' },
+              { val: 'deck', label: 'Decks' },
+              { val: 'basement', label: 'Basements' },
+              { val: 'floor', label: 'Flooring' },
+            ].map((f) => (
+              <button key={f.val} className={`chip${activeFilter === f.val ? ' active' : ''}`} onClick={() => setActiveFilter(f.val)}>
+                {f.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="gallery-grid reveal">
+            {filtered.map((item) => (
+              <div key={item.code} className="g-item" style={{ gridColumn: `span ${item.col}`, aspectRatio: item.ratio }}>
+                <img src={item.img} alt={item.title} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                <div className="g-corner mono">{item.code}</div>
+                <div className="g-info">
+                  <span className="serif" style={{ fontSize: 18, color: '#fff', fontStyle: 'italic' }}>{item.title}</span>
+                  <span className="mono" style={{ fontSize: '10.5px', textTransform: 'uppercase', letterSpacing: '.08em', opacity: .8, color: '#fff' }}>{item.meta}</span>
                 </div>
               </div>
             ))}
           </div>
+
+          <div style={{ marginTop: 32, textAlign: 'center' }}>
+            <Link to="/projects" className="btn-ghost">Browse all projects →</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── ABOUT ── */}
+      <section id="about" style={{ background: 'var(--color-bg-2)', padding: '96px 0', borderTop: '1px solid var(--color-line)' }}>
+        <div className="wrap">
+          <div className="sec-head reveal">
+            <div>
+              <div className="sec-num">004 / About</div>
+              <h2 className="h-section">One name.<br />One <em>phone</em>.</h2>
+            </div>
+            <div className="lead">
+              <p>LC Quality Improvements is a locally-owned, owner-operated general contractor based in Centereach. No middlemen, no rotating crews — you work directly with Luis for the length of the project.</p>
+            </div>
+          </div>
+
+          <div className="about-grid reveal">
+            <div className="portrait">
+              <img src="/images/kitchen.jpg" alt="LC Quality work" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'saturate(.8) brightness(.85)' }} />
+              <div className="p-caption">
+                <span>LC Quality Improvements — Centereach, NY</span>
+                <span>Est. 2014</span>
+              </div>
+            </div>
+            <div>
+              <p className="pullquote">"We treat your home like it's <em>our own</em>. Plastic on the floors every day, vacuum before we leave, and a straight answer to every question."</p>
+              <p style={{ fontSize: 15 }}>Luis has been building on Long Island since 2014. LC started as weekend kitchen jobs, grew through word-of-mouth, and now runs a small bench of trusted sub-trades — plumbers, electricians, tile setters — he's worked with for a decade. The company is intentionally small so that the quality stays high and the owner is still on every job site.</p>
+              <div className="stats-row">
+                <div className="stat-item"><div className="stat-num"><em>120</em>+</div><div className="stat-lbl">Homes served</div></div>
+                <div className="stat-item"><div className="stat-num"><em>11</em> yr</div><div className="stat-lbl">On the Island</div></div>
+                <div className="stat-item"><div className="stat-num"><em>100</em>%</div><div className="stat-lbl">Recommend rate</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── REVIEWS ── */}
+      <section id="reviews" style={{ background: 'var(--color-bg)', padding: '96px 0', borderTop: '1px solid var(--color-line)' }}>
+        <div className="wrap">
+          <div className="sec-head reveal">
+            <div>
+              <div className="sec-num">005 / What clients say</div>
+              <h2 className="h-section">Reviews, in<br />their <em>own words</em>.</h2>
+            </div>
+            <div className="lead">
+              <p>Every project ends with a walk-through and an honest ask for feedback. Here's a representative sampling from Angi, HomeAdvisor and direct referrals.</p>
+            </div>
+          </div>
+
+          <div className="reviews-grid reveal">
+            {reviews.map((r, i) => (
+              <div key={i} className="review-card">
+                <div className="r-stars">★★★★★</div>
+                <blockquote>{r.text}</blockquote>
+                <div className="r-who"><b>{r.name}</b><span>{r.loc}</span></div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ marginTop: 32, textAlign: 'center' }}>
+            <Link to="/reviews" className="btn-ghost">Read all reviews →</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section id="faq" style={{ background: 'var(--color-bg-2)', padding: '96px 0', borderTop: '1px solid var(--color-line)' }}>
+        <div className="wrap">
+          <div className="sec-head reveal">
+            <div>
+              <div className="sec-num">006 / Answers</div>
+              <h2 className="h-section">Frequently asked,<br />plainly <em>answered</em>.</h2>
+            </div>
+            <div className="lead">
+              <p>The questions we hear on most first-visit walk-throughs.</p>
+            </div>
+          </div>
+
+          <div className="reveal" style={{ maxWidth: 780 }}>
+            {faqItems.map((item, i) => (
+              <div key={i} className={`faq-item${openFaq === i ? ' open' : ''}`}>
+                <button className="faq-q" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
+                  <span>{item.q}</span>
+                  <span className="faq-plus">+</span>
+                </button>
+                <div className="faq-a">
+                  <div className="faq-a-inner">{item.a}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── ESTIMATE / CTA ── */}
+      <section id="estimate" style={{ background: '#05090f', padding: '96px 0', borderTop: '1px solid var(--color-line)', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(600px 400px at 80% 20%, rgba(110,168,255,.15), transparent 60%)', pointerEvents: 'none' }} />
+        <div className="wrap" style={{ position: 'relative' }}>
+          <div className="sec-head">
+            <div>
+              <div className="sec-num">007 / Get in touch</div>
+              <h2 className="h-section">Tell us about<br />the <em>project</em>.</h2>
+            </div>
+            <div className="lead">
+              <p>We'll get back to you within one business day to set up a free in-home walk-through.</p>
+            </div>
+          </div>
+
+          {submitted ? (
+            <div className="form-success show">
+              Thanks — we'll be in touch within one business day to set up the walk-through. —Luis
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit}>
+              <div className="form-grid">
+                <div className="form-col">
+                  <div className="field">
+                    <label>01 · Your name</label>
+                    <input name="name" placeholder="Jane Homeowner" required />
+                  </div>
+                  <div className="field">
+                    <label>02 · Email</label>
+                    <input name="email" type="email" placeholder="jane@email.com" required />
+                  </div>
+                  <div className="field">
+                    <label>03 · Phone</label>
+                    <input name="phone" type="tel" placeholder="(631) 555-0123" required />
+                  </div>
+                  <div className="field">
+                    <label>04 · Town</label>
+                    <input name="town" placeholder="Centereach, NY" required />
+                  </div>
+                </div>
+                <div className="form-col">
+                  <div className="field">
+                    <label>05 · Scope (select all that apply)</label>
+                    <div className="chips-multi">
+                      {['Kitchen', 'Bathroom', 'Addition', 'Basement', 'Flooring', 'Other'].map((s) => (
+                        <span key={s} className={`pill${scope.includes(s) ? ' on' : ''}`} onClick={() => toggleScope(s)}>{s}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="field">
+                    <label>06 · Rough budget</label>
+                    <input type="range" style={{ width: '100%' }} min="5" max="200" step="5" value={budget} onChange={(e) => setBudget(+e.target.value)} />
+                    <div className="budget-readout">{fmt(budget)}</div>
+                  </div>
+                  <div className="field">
+                    <label>07 · Ideal start</label>
+                    <select name="timeline">
+                      <option>As soon as possible</option>
+                      <option>Within 1 month</option>
+                      <option>1–3 months out</option>
+                      <option>3–6 months out</option>
+                      <option>Just planning for now</option>
+                    </select>
+                  </div>
+                  <div className="field">
+                    <label>08 · Anything else</label>
+                    <textarea name="message" placeholder="Existing layout, inspiration, timing constraints…" />
+                  </div>
+                </div>
+              </div>
+              <div className="form-submit-row">
+                <div className="mono" style={{ fontSize: 11, letterSpacing: '.1em', color: 'var(--color-muted)', textTransform: 'uppercase' }}>
+                  → Reply within 1 business day
+                </div>
+                <button className="btn-primary" type="submit">
+                  <span>Send request</span>
+                  <span>→</span>
+                </button>
+              </div>
+            </form>
+          )}
         </div>
       </section>
 
       <AreasSection />
-
-      <CtaBand />
-
-      {/* CONTACT */}
-      <section id='contact' className='py-20 px-[6%] bg-navy'>
-        <div className='max-w-[1180px] mx-auto'>
-          <div className='mb-11 fi'>
-            <div className='inline-block text-ice text-[0.72rem] font-extrabold tracking-[2px] uppercase mb-2'>
-              Contact Us
-            </div>
-            <h2 className='text-[clamp(1.75rem,3.5vw,2.65rem)] font-black text-white tracking-[-1px] leading-[1.14] mb-3'>
-              Get Your Free Estimate
-            </h2>
-            <p className='text-muted text-[0.96rem] leading-[1.75] max-w-[560px]'>
-              Fill in the form and we'll reach out within 24 hours to schedule
-              your free, no-pressure estimate.
-            </p>
-          </div>
-          <div className='grid grid-cols-[1fr_1.35fr] gap-14 items-start max-[800px]:grid-cols-1'>
-            <div className='fi'>
-              {[
-                {
-                  icon: 'map-marker-alt',
-                  title: 'Office',
-                  desc: '14 Maple St, Centereach, NY 11720',
-                },
-                {
-                  icon: 'phone',
-                  title: 'Phone',
-                  desc: '(631) 605-9477',
-                  href: 'tel:6316059477',
-                },
-                {
-                  icon: 'envelope',
-                  title: 'Email',
-                  desc: 'Lcqualityimprovements@gmail.com',
-                },
-                {
-                  icon: 'clock',
-                  title: 'Hours',
-                  desc: 'Mon – Sat: 7:00 AM – 7:00 PM',
-                },
-              ].map((c) => (
-                <div
-                  key={c.title}
-                  className='flex items-start gap-[0.9rem] mb-[1.1rem]'
-                >
-                  <div className='w-[42px] h-[42px] rounded-[11px] shrink-0 bg-gradient-to-br from-blue to-ice flex items-center justify-center text-[0.9rem] text-white'>
-                    <i className={`fas fa-${c.icon}`} />
-                  </div>
-                  <div>
-                    <strong className='block font-extrabold text-white text-[0.88rem]'>
-                      {c.title}
-                    </strong>
-                    {c.href ? (
-                      <a href={c.href} className='text-[0.82rem] text-ice'>
-                        {c.desc}
-                      </a>
-                    ) : (
-                      <span className='text-[0.82rem] text-muted'>
-                        {c.desc}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <ContactForm />
-          </div>
-        </div>
-      </section>
-    </div>
-  );
-}
-
-function ContactForm() {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const btn = (e.target as HTMLFormElement).querySelector(
-      '.f-submit',
-    ) as HTMLButtonElement;
-    if (btn) {
-      btn.innerHTML = '<i class="fas fa-check"></i>&nbsp; Request Sent!';
-      btn.style.background = 'linear-gradient(135deg, #00C853, #00E676)';
-      setTimeout(() => {
-        btn.innerHTML =
-          '<i class="fas fa-paper-plane"></i>&nbsp; Send My Request';
-        btn.style.background = '';
-        (e.target as HTMLFormElement).reset();
-      }, 3000);
-    }
-  };
-
-  return (
-    <div className='bg-glass border border-gline rounded-3xl p-8 fi'>
-      <form onSubmit={handleSubmit}>
-        <div className='grid grid-cols-2 gap-4 max-[480px]:grid-cols-1'>
-          <div className='mb-4'>
-            <label className='block text-[0.73rem] font-black text-muted uppercase tracking-wider mb-1'>
-              First Name
-            </label>
-            <input
-              type='text'
-              placeholder='John'
-              required
-              className='w-full bg-[rgba(255,255,255,0.05)] border border-gline rounded-2xl px-[0.95rem] py-3 text-white text-[0.88rem] outline-none transition-all focus:border-ice focus:bg-[rgba(0,176,255,0.06)]'
-            />
-          </div>
-          <div className='mb-4'>
-            <label className='block text-[0.73rem] font-black text-muted uppercase tracking-wider mb-1'>
-              Last Name
-            </label>
-            <input
-              type='text'
-              placeholder='Smith'
-              required
-              className='w-full bg-[rgba(255,255,255,0.05)] border border-gline rounded-2xl px-[0.95rem] py-3 text-white text-[0.88rem] outline-none transition-all focus:border-ice focus:bg-[rgba(0,176,255,0.06)]'
-            />
-          </div>
-        </div>
-        <div className='grid grid-cols-2 gap-4 max-[480px]:grid-cols-1'>
-          <div className='mb-4'>
-            <label className='block text-[0.73rem] font-black text-muted uppercase tracking-wider mb-1'>
-              Phone
-            </label>
-            <input
-              type='tel'
-              placeholder='631-000-0000'
-              required
-              className='w-full bg-[rgba(255,255,255,0.05)] border border-gline rounded-2xl px-[0.95rem] py-3 text-white text-[0.88rem] outline-none transition-all focus:border-ice focus:bg-[rgba(0,176,255,0.06)]'
-            />
-          </div>
-          <div className='mb-4'>
-            <label className='block text-[0.73rem] font-black text-muted uppercase tracking-wider mb-1'>
-              Email
-            </label>
-            <input
-              type='email'
-              placeholder='john@email.com'
-              required
-              className='w-full bg-[rgba(255,255,255,0.05)] border border-gline rounded-2xl px-[0.95rem] py-3 text-white text-[0.88rem] outline-none transition-all focus:border-ice focus:bg-[rgba(0,176,255,0.06)]'
-            />
-          </div>
-        </div>
-        <div className='mb-4'>
-          <label className='block text-[0.73rem] font-black text-muted uppercase tracking-wider mb-1'>
-            Service Needed
-          </label>
-          <select
-            required
-            className='w-full bg-[rgba(255,255,255,0.05)] border border-gline rounded-2xl px-[0.95rem] py-3 text-white text-[0.88rem] outline-none transition-all focus:border-ice focus:bg-[rgba(0,176,255,0.06)]'
-          >
-            <option value='' disabled>
-              Select a service...
-            </option>
-            <option>Kitchen Remodeling</option>
-            <option>Bathroom Renovation</option>
-            <option>Electrical Work</option>
-            <option>Deck & Outdoor</option>
-            <option>Roofing</option>
-            <option>Flooring</option>
-            <option>Basement Finishing</option>
-            <option>Doors & Windows</option>
-            <option>Painting</option>
-            <option>Multiple / Other</option>
-          </select>
-        </div>
-        <div className='mb-4'>
-          <label className='block text-[0.73rem] font-black text-muted uppercase tracking-wider mb-1'>
-            Tell Us About Your Project
-          </label>
-          <textarea
-            placeholder='Describe your project, timeline, budget, or any questions...'
-            className='w-full bg-[rgba(255,255,255,0.05)] border border-gline rounded-2xl px-[0.95rem] py-3 text-white text-[0.88rem] outline-none transition-all focus:border-ice focus:bg-[rgba(0,176,255,0.06)] resize-y min-h-[100px]'
-          />
-        </div>
-        <button
-          type='submit'
-          className='btn-grad w-full py-[0.88rem] text-[0.97rem] font-extrabold justify-center f-submit'
-        >
-          <i className='fas fa-paper-plane' /> Send My Request
-        </button>
-      </form>
-    </div>
+      <CtaBand title="Ready to Start Your Project?" primaryLabel="Get a Free Estimate" />
+    </>
   );
 }

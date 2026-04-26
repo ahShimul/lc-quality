@@ -1,184 +1,112 @@
+import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { useFadeIn } from '../hooks/useFadeIn';
-import { BeforeAfterSlider } from '../components/sections/BeforeAfterSlider';
 import { CtaBand } from '../components/sections/CtaBand';
 
 const projects = [
-  {
-    beforeSrc: '/images/kitchen-before.jpg',
-    afterSrc: '/images/kitchen-after.jpg',
-    title: 'Kitchen Renovation — Stony Brook',
-    description: 'New cabinets, quartz counters & recessed lighting',
-  },
-  {
-    beforeSrc: '/images/bathroom-before.jpg',
-    afterSrc: '/images/bathroom-after.jpg',
-    title: 'Master Bathroom — Smithtown',
-    description: 'Walk-in shower, heated floors & custom tile',
-  },
-  {
-    beforeSrc: '/images/deck-before.jpg',
-    afterSrc: '/images/deck-after.jpg',
-    title: 'Composite Deck — Commack',
-    description: 'Multi-level deck with built-in bench & pergola',
-  },
-  {
-    beforeSrc: '/images/living-room-before.jpg',
-    afterSrc: '/images/living-room-after.jpg',
-    title: 'Living Room Flooring — Hauppauge',
-    description: 'Luxury vinyl plank installation, full first floor',
-  },
-  {
-    beforeSrc: '/images/basement-before.jpg',
-    afterSrc: '/images/basement.jpg',
-    title: 'Basement Finish — Ronkonkoma',
-    description: 'Full build-out with home office & recessed lighting',
-  },
-  {
-    beforeSrc: '/images/exterior-painting-before.jpg',
-    afterSrc: '/images/exterior-painting-after.jpg',
-    title: 'Exterior Painting — Centereach',
-    description: 'Full exterior repaint, trim & shutters',
-  },
+  { cat: 'kitchen', code: 'K-014', title: 'Stony Brook kitchen', loc: 'Stony Brook, NY', meta: 'White oak cabinets · Quartz countertops · Recessed lighting', before: '/images/kitchen-before.jpg', after: '/images/kitchen-after.jpg', col: 7, ratio: '16/10' },
+  { cat: 'bath', code: 'B-022', title: 'Smithtown master bath', loc: 'Smithtown, NY', meta: 'Walk-in shower · Heated floors · Custom tile', before: '/images/bathroom-before.jpg', after: '/images/bathroom-after.jpg', col: 5, ratio: '4/5' },
+  { cat: 'deck', code: 'D-007', title: 'Commack composite deck', loc: 'Commack, NY', meta: 'Multi-level deck · Built-in bench · Pergola', before: '/images/deck-before.jpg', after: '/images/deck-after.jpg', col: 6, ratio: '4/3' },
+  { cat: 'floor', code: 'F-031', title: 'Hauppauge living room floors', loc: 'Hauppauge, NY', meta: 'LVP · Full first floor', before: '/images/living-room-before.jpg', after: '/images/living-room-after.jpg', col: 6, ratio: '4/3' },
+  { cat: 'basement', code: 'BA-009', title: 'Ronkonkoma basement', loc: 'Ronkonkoma, NY', meta: 'Full build-out · Home office · Recessed lighting', before: '/images/basement-before.jpg', after: '/images/basement.jpg', col: 5, ratio: '4/5' },
+  { cat: 'exterior', code: 'EP-003', title: 'Exterior painting', loc: 'Port Jefferson, NY', meta: 'Full exterior · Trim · Shutters', before: '/images/exterior-painting-before.jpg', after: '/images/exterior-painting-after.jpg', col: 7, ratio: '16/10' },
+];
+
+const filters = [
+  { val: 'all', label: 'All work' },
+  { val: 'kitchen', label: 'Kitchens' },
+  { val: 'bath', label: 'Bathrooms' },
+  { val: 'deck', label: 'Decks' },
+  { val: 'basement', label: 'Basements' },
+  { val: 'floor', label: 'Flooring' },
+  { val: 'exterior', label: 'Exterior' },
 ];
 
 export function ProjectsPage() {
-  const fadeRef = useFadeIn();
+  const [active, setActive] = useState('all');
+  const [view, setView] = useState<'after' | 'before'>('after');
+
+  const filtered = active === 'all' ? projects : projects.filter((p) => p.cat === active);
 
   return (
-    <div ref={fadeRef}>
+    <>
       <Helmet>
-        <title>Our Projects | LC Quality Improvements</title>
-        <meta
-          name='description'
-          content='See before & after transformations from real Long Island homes — kitchens, bathrooms, decks and more by LC Quality Improvements.'
-        />
+        <title>Projects & Portfolio | LC Quality Improvements</title>
+        <meta name="description" content="Before and after photos from real Long Island remodeling projects — kitchens, bathrooms, decks, basements and more." />
       </Helmet>
 
-      {/* HERO */}
-      <section
-        className='relative pt-[68px] py-20 px-[6%] text-center overflow-hidden'
-        style={{
-          background:
-            'linear-gradient(160deg, #060F1E 0%, #0C2040 55%, #091830 100%)',
-        }}
-      >
-        <div
-          className='absolute top-0 right-1/4 w-[600px] h-[400px] rounded-full pointer-events-none'
-          style={{
-            background:
-              'radial-gradient(ellipse, rgba(0,176,255,0.09) 0%, transparent 70%)',
-          }}
-        />
-        <div className='relative z-10 max-w-[700px] mx-auto'>
-          <div className='inline-flex items-center gap-3 mb-4 fi'>
-            <span
-              className='w-8 h-px'
-              style={{
-                background: 'linear-gradient(to right, transparent, #00B0FF)',
-              }}
-            />
-            <span className='text-ice text-[0.72rem] font-extrabold tracking-[2.5px] uppercase'>
-              Real Results
-            </span>
-            <span
-              className='w-8 h-px'
-              style={{
-                background: 'linear-gradient(to left, transparent, #00B0FF)',
-              }}
-            />
-          </div>
-          <h1 className='text-[clamp(2rem,5vw,3.4rem)] font-black text-white tracking-[-1.5px] leading-[1.1] mb-4 fi'>
-            Before &amp; After{' '}
-            <em className='not-italic text-ice'>Transformations</em>
+      {/* PAGE HEADER */}
+      <section style={{ background: 'var(--color-bg)', padding: '120px 0 72px', borderBottom: '1px solid var(--color-line)' }}>
+        <div className="wrap">
+          <div className="sec-num">Portfolio</div>
+          <h1 className="h-display" style={{ maxWidth: 720, marginTop: 12 }}>
+            Real homes,<br /><em>honest</em> documentation.
           </h1>
-          <p className='text-muted text-[0.97rem] leading-[1.75] max-w-[520px] mx-auto fi'>
-            Drag the slider on each photo to see the difference. Real Long
-            Island homes, real results.
+          <p style={{ maxWidth: 560, marginTop: 20, fontSize: 16, lineHeight: 1.7, color: 'var(--color-muted)' }}>
+            Every project is photographed after the final walk-through. No staging, no render. Filter by category and toggle between before and after.
           </p>
-          <div className='flex justify-center gap-6 mt-7 fi'>
-            {[
-              { icon: 'hammer', text: '500+ Projects Done' },
-              { icon: 'star', text: '5.0 Google Rating' },
-              { icon: 'map-marker-alt', text: 'All of Long Island' },
-            ].map((stat) => (
-              <div
-                key={stat.text}
-                className='flex items-center gap-2 text-[0.85rem] font-bold text-text'
-              >
-                <i className={`fas fa-${stat.icon} text-ice`} /> {stat.text}
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
-      {/* BEFORE / AFTER GRID */}
-      <section className='relative py-20 px-[6%] bg-navy2 overflow-hidden'>
-        <div
-          className='absolute bottom-0 left-1/3 w-[500px] h-[400px] rounded-full pointer-events-none'
-          style={{
-            background:
-              'radial-gradient(ellipse, rgba(21,101,192,0.07) 0%, transparent 70%)',
-          }}
-        />
-        <div className='max-w-[1180px] mx-auto relative z-10'>
-          <div className='text-center mb-11 fi'>
-            <div className='inline-flex items-center gap-3 mb-3'>
-              <span
-                className='w-8 h-px'
-                style={{
-                  background: 'linear-gradient(to right, transparent, #00B0FF)',
-                }}
-              />
-              <span className='text-ice text-[0.72rem] font-extrabold tracking-[2.5px] uppercase'>
-                Portfolio
-              </span>
-              <span
-                className='w-8 h-px'
-                style={{
-                  background: 'linear-gradient(to left, transparent, #00B0FF)',
-                }}
-              />
+      {/* GALLERY */}
+      <section style={{ background: 'var(--color-bg)', padding: '72px 0 96px' }}>
+        <div className="wrap">
+          {/* Controls */}
+          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'center', marginBottom: 32 }}>
+            <div className="filter-bar" role="tablist" style={{ marginBottom: 0, flex: 1, minWidth: 0 }}>
+              {filters.map((f) => (
+                <button key={f.val} className={`chip${active === f.val ? ' active' : ''}`} onClick={() => setActive(f.val)}>
+                  {f.label}
+                </button>
+              ))}
             </div>
-            <h2 className='text-[clamp(1.6rem,3.2vw,2.4rem)] font-black text-white tracking-[-1px] leading-[1.14] mb-3'>
-              Recent Work — Long Island Homes
-            </h2>
-            <p className='text-muted text-[0.93rem] leading-[1.75] max-w-[500px] mx-auto'>
-              Drag the slider on each photo to see the before and after
-              difference.
-            </p>
+            <div style={{ display: 'flex', gap: 4, background: 'var(--color-paper)', border: '1px solid var(--color-line)', borderRadius: 8, padding: 3, flexShrink: 0 }}>
+              {(['after', 'before'] as const).map((v) => (
+                <button key={v} onClick={() => setView(v)} style={{ padding: '6px 14px', borderRadius: 6, fontSize: 12, fontFamily: 'var(--font-mono)', fontWeight: 600, letterSpacing: '.06em', textTransform: 'uppercase', cursor: 'pointer', border: 'none', background: view === v ? 'var(--color-accent)' : 'transparent', color: view === v ? '#fff' : 'var(--color-muted)', transition: 'all .2s' }}>
+                  {v}
+                </button>
+              ))}
+            </div>
           </div>
-          <div className='grid grid-cols-3 gap-[1.4rem] max-[880px]:grid-cols-2 max-[560px]:grid-cols-1'>
-            {projects.map((p, i) => (
-              <div
-                key={i}
-                className='fi'
-                style={{ transitionDelay: `${i * 60}ms` }}
-              >
-                <BeforeAfterSlider
-                  beforeSrc={p.beforeSrc}
-                  afterSrc={p.afterSrc}
-                  title={p.title}
-                  description={p.description}
-                />
+
+          <div className="gallery-grid reveal">
+            {filtered.map((p) => (
+              <div key={p.code} className="g-item" style={{ gridColumn: `span ${p.col}`, aspectRatio: p.ratio }}>
+                <img src={view === 'after' ? p.after : p.before} alt={`${p.title} — ${view}`} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', transition: 'opacity .4s' }} />
+                <div className="g-corner mono">{p.code}</div>
+                <div className="g-info">
+                  <span style={{ fontSize: 18, color: '#fff', fontFamily: 'var(--font-serif)', fontStyle: 'italic' }}>{p.title}</span>
+                  <span className="mono" style={{ fontSize: '10.5px', textTransform: 'uppercase', letterSpacing: '.08em', opacity: .8, color: '#fff' }}>{p.meta}</span>
+                  <span className="mono" style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.06em', opacity: .65, color: '#fff' }}>{p.loc}</span>
+                </div>
               </div>
             ))}
           </div>
-          <div className='mt-12 text-center fi'>
-            <p className='text-muted text-[0.9rem] mb-5'>
-              Ready to transform your own home?
-            </p>
-            <Link to='/contact' className='btn-grad'>
-              <i className='fas fa-clipboard-check' /> Start With a Free
-              Estimate
-            </Link>
+
+          {filtered.length === 0 && (
+            <p style={{ textAlign: 'center', color: 'var(--color-muted)', fontSize: 15, padding: '48px 0' }}>No projects in this category yet — check back soon.</p>
+          )}
+        </div>
+      </section>
+
+      {/* CTA NUDGE */}
+      <section style={{ background: 'var(--color-bg-2)', padding: '72px 0', borderTop: '1px solid var(--color-line)' }}>
+        <div className="wrap">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'center' }} className="reveal">
+            <div>
+              <div className="sec-num">Your project, next</div>
+              <h2 className="h-section" style={{ marginTop: 8 }}>Want to see<br />what we'd do <em>here</em>?</h2>
+              <p style={{ fontSize: 15, lineHeight: 1.7, color: 'var(--color-muted)', marginTop: 12, maxWidth: 440 }}>Book a free walk-through. We'll show up, measure, ask the right questions, and send a written quote within 48 hours.</p>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <Link to="/contact" className="btn-primary">Request a free estimate →</Link>
+              <Link to="/process" className="btn-ghost" style={{ textAlign: 'center' }}>How it works →</Link>
+            </div>
           </div>
         </div>
       </section>
 
-      <CtaBand />
-    </div>
+      <CtaBand title="Seen enough?" titleEm="Let's talk." primaryLabel="Get a Free Estimate" />
+    </>
   );
 }

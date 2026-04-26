@@ -1,34 +1,29 @@
-interface TrustChip {
-    icon: string;
-    text: string;
-    highlight?: boolean;
+interface Chip {
+  icon: string;
+  text: string;
+  highlight?: boolean;
 }
 
-interface TrustStripProps {
-    chips: TrustChip[];
+interface Props {
+  chips: Chip[];
 }
 
-export function TrustStrip({ chips }: TrustStripProps) {
-    return (
-        <div className="bg-navy2 py-[1.6rem] px-[6%] border-b border-gline">
-            <div className="max-w-[1160px] mx-auto flex flex-wrap gap-[0.9rem] items-center justify-center">
-                {chips.map((chip, i) => (
-                    <div
-                        key={i}
-                        className={`
-              inline-flex items-center gap-2 px-[0.95rem] py-2 rounded-full
-              text-[0.8rem] font-bold border
-              ${chip.highlight
-                                ? "border-[rgba(0,230,118,0.4)] text-good"
-                                : "bg-[rgba(255,255,255,0.04)] border-gline text-text"
-                            }
-            `}
-                    >
-                        <i className={`fas fa-${chip.icon} ${chip.highlight ? "text-good" : "text-ice"}`} />
-                        {chip.text}
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
+export function TrustStrip({ chips }: Props) {
+  return (
+    <div className="bg-bg-2 border-y border-line py-4 px-[5%]">
+      <div className="max-w-[1200px] mx-auto flex items-center justify-center gap-8 flex-wrap">
+        {chips.map((c) => (
+          <div
+            key={c.text}
+            className="flex items-center gap-2"
+          >
+            <i className={`fas fa-${c.icon} text-[11px] ${c.highlight ? "text-accent" : "text-muted"}`} />
+            <span className="mono text-[11px] tracking-[0.1em] uppercase text-ink-2">
+              {c.text}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
