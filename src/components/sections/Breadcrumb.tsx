@@ -1,31 +1,36 @@
 import { Link } from "react-router-dom";
 
 interface BreadcrumbItem {
-    label: string;
-    to?: string;
+  label: string;
+  to?: string;
 }
 
-interface BreadcrumbProps {
-    items: BreadcrumbItem[];
+interface Props {
+  items: BreadcrumbItem[];
 }
 
-export function Breadcrumb({ items }: BreadcrumbProps) {
-    return (
-        <div className="bg-[rgba(255,255,255,0.03)] border-b border-gline py-3 px-[6%] mt-[68px]">
-            <div className="max-w-[1160px] mx-auto flex items-center gap-2 text-[0.78rem] text-muted">
-                {items.map((item, i) => (
-                    <span key={i} className="flex items-center gap-2">
-                        {i > 0 && <i className="fas fa-chevron-right text-[0.6rem]" />}
-                        {item.to ? (
-                            <Link to={item.to} className="text-muted transition-colors hover:text-ice">
-                                {item.label}
-                            </Link>
-                        ) : (
-                            <span className="text-ice">{item.label}</span>
-                        )}
-                    </span>
-                ))}
-            </div>
-        </div>
-    );
+export function Breadcrumb({ items }: Props) {
+  return (
+    <nav className="bg-bg border-b border-line py-3 px-[5%]">
+      <div className="max-w-[1320px] mx-auto flex items-center gap-2">
+        {items.map((item, i) => (
+          <span key={i} className="flex items-center gap-2">
+            {i > 0 && <span className="text-[11px] text-line">/</span>}
+            {item.to ? (
+              <Link
+                to={item.to}
+                className="mono text-[11px] tracking-[0.08em] text-muted hover:text-accent transition-colors"
+              >
+                {item.label}
+              </Link>
+            ) : (
+              <span className="mono text-[11px] tracking-[0.08em] text-ink-2">
+                {item.label}
+              </span>
+            )}
+          </span>
+        ))}
+      </div>
+    </nav>
+  );
 }

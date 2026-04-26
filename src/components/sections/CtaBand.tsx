@@ -1,43 +1,43 @@
 import { Link } from "react-router-dom";
 
-interface CtaBandProps {
-    title?: string;
-    description?: string;
-    primaryLabel?: string;
-    primaryTo?: string;
-    secondaryLabel?: string;
-    secondaryHref?: string;
+interface Props {
+  title?: string;
+  titleEm?: string;
+  subtitle?: string;
+  primaryLabel?: string;
 }
 
 export function CtaBand({
-    title = "Ready to Start Your Project?",
-    description = "Get your free, no-obligation estimate today. We'll come to you anywhere on Long Island.",
-    primaryLabel = "Request Free Estimate",
-    primaryTo = "/contact",
-    secondaryLabel = "Call (631) 605-9477",
-    secondaryHref = "tel:6316059477",
-}: CtaBandProps) {
-    return (
-        <section className="bg-gradient-to-br from-[#0B1E40] via-blue to-ice py-[4.5rem] px-[6%] text-center relative overflow-hidden">
-            <div className="absolute -top-[120px] -left-[120px] w-[360px] h-[360px] rounded-full bg-[rgba(255,255,255,0.06)]" />
-            <div className="absolute -bottom-[80px] -right-[80px] w-[280px] h-[280px] rounded-full bg-[rgba(255,255,255,0.06)]" />
-
-            <div className="max-w-[1160px] mx-auto relative z-10">
-                <h2 className="text-[clamp(1.8rem,4vw,3rem)] font-black text-white tracking-[-1px] mb-4">
-                    {title}
-                </h2>
-                <p className="text-[1.05rem] text-white/80 max-w-[500px] mx-auto mb-8 leading-[1.72]">
-                    {description}
-                </p>
-                <div className="flex gap-4 justify-center flex-wrap">
-                    <Link to={primaryTo} className="btn-white">
-                        <i className="fas fa-clipboard-check" /> {primaryLabel}
-                    </Link>
-                    <a href={secondaryHref} className="btn-outline-w">
-                        <i className="fas fa-phone" /> {secondaryLabel}
-                    </a>
-                </div>
-            </div>
-        </section>
-    );
+  title = "Ready to start",
+  titleEm = "your project?",
+  subtitle = "Get a detailed written estimate — no pressure, no commitment.",
+  primaryLabel = "Get a Free Estimate",
+}: Props) {
+  return (
+    <section className="relative py-24 px-[5%] overflow-hidden" style={{ background: "var(--color-bg)" }}>
+      {/* Accent glow */}
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full pointer-events-none opacity-20"
+        style={{ background: "radial-gradient(ellipse, rgba(110,168,255,0.3), transparent 70%)" }}
+      />
+      <div className="max-w-[720px] mx-auto text-center relative z-10">
+        <h2 className="h-section text-ink mb-4">
+          {title} <em>{titleEm}</em>
+        </h2>
+        <p className="text-[15px] text-muted leading-[1.7] mb-8 max-w-[480px] mx-auto">
+          {subtitle}
+        </p>
+        <div className="flex justify-center gap-3 flex-wrap">
+          <Link to="/contact" className="btn-primary">
+            <span>{primaryLabel}</span>
+            <i className="fas fa-arrow-right text-[11px]" />
+          </Link>
+          <a href="tel:6316059477" className="btn-ghost">
+            <span>(631) 605-9477</span>
+            <i className="fas fa-phone text-[11px]" />
+          </a>
+        </div>
+      </div>
+    </section>
+  );
 }

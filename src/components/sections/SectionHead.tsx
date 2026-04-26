@@ -1,24 +1,36 @@
-interface SectionHeadProps {
-    eyebrow: string;
-    title: string;
-    subtitle?: string;
-    center?: boolean;
+interface Props {
+  num?: string;
+  eyebrow?: string;
+  title: string;
+  titleEm?: string;
+  description?: string;
 }
 
-export function SectionHead({ eyebrow, title, subtitle, center = false }: SectionHeadProps) {
-    return (
-        <div className={`mb-11 ${center ? "text-center" : ""}`}>
-            <div className="inline-block text-ice text-[0.72rem] font-extrabold tracking-[2px] uppercase mb-2">
-                {eyebrow}
-            </div>
-            <h2 className="text-[clamp(1.75rem,3.5vw,2.65rem)] font-black text-white tracking-[-1px] leading-[1.14] mb-3">
-                {title}
-            </h2>
-            {subtitle && (
-                <p className={`text-muted text-[0.96rem] leading-[1.75] max-w-[560px] ${center ? "mx-auto" : ""}`}>
-                    {subtitle}
-                </p>
-            )}
-        </div>
-    );
+export function SectionHead({ num, eyebrow, title, titleEm, description }: Props) {
+  return (
+    <div className="flex flex-col min-[780px]:flex-row min-[780px]:items-end min-[780px]:justify-between gap-6 mb-14">
+      <div className="max-w-[620px]">
+        {(num || eyebrow) && (
+          <div className="sec-num">
+            {num && <>{num}</>}
+            {num && eyebrow && <span className="text-line">/</span>}
+            {eyebrow && <>{eyebrow}</>}
+          </div>
+        )}
+        <h2 className="h-section text-ink">
+          {title}
+          {titleEm && (
+            <>
+              {" "}<em>{titleEm}</em>
+            </>
+          )}
+        </h2>
+      </div>
+      {description && (
+        <p className="text-[15px] text-muted leading-[1.7] max-w-[380px]">
+          {description}
+        </p>
+      )}
+    </div>
+  );
 }
